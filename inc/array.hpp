@@ -36,6 +36,8 @@ namespace util
 
         bool empty() { return N == 0; }
 
+        T *data() {return &__data[0]; }
+
         T __data[N]; /** Data store used internally */
     };
 }
