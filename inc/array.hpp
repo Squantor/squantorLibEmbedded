@@ -34,6 +34,8 @@ namespace util
     {
         size_t size() { return N; }
 
+        bool empty() { return N == 0; }
+
         T __data[N]; /** Data store used internally */
     };
 }
