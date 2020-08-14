@@ -32,10 +32,19 @@ namespace util
     template<typename T, size_t N>
     struct array 
     {
+        /** \brief Return size of the array 
+         *  \return Size of the array
+         */
         size_t size() { return N; }
 
-        bool empty() { return N == 0; }
+        /** \brief Return if the array is empty 
+         *  \return true if the array is empty
+         */
 
+        bool empty() { return N == 0; }
+        /** \brief Return a pointer to actual array 
+         *  \return Pointer of type to C style array
+         */
         T *data() {return &__data[0]; }
 
         T __data[N]; /** Data store used internally */
