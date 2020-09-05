@@ -55,8 +55,15 @@ namespace util
         */
         constexpr const T& operator[](size_t n) const { return __data[n]; }
 
-        
+        /** \brief return first element
+        \return reference to the first element in the array
+        */
+        constexpr T& front() { return __data[0]; }
 
+        /** \brief return first const element
+        \return reference to the first const element in the array
+        */
+        constexpr const T& front() const { return __data[0]; }
 
         T __data[N]; /** Data store used internally */
     };
