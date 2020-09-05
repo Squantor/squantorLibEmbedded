@@ -40,10 +40,15 @@ namespace util
         */
         constexpr bool empty() const { return N == 0; }
 
-        /** \brief Return a pointer to actual array 
+        /** \brief Return a pointer to the internal array 
         \return Pointer of type to C style array
         */
         constexpr T *data() { return &__data[0]; }
+
+        /** \brief Return a const pointer to the internal array 
+        \return Const pointer of type to C style array
+        */
+        constexpr const T *data() const { return &__data[0]; }
 
         /** \brief Indexing operator
         \return reference to the indexed element
