@@ -70,6 +70,16 @@ namespace util
         */
         constexpr const T& front() const { return __data[0]; }
 
+        /** \brief return last element
+        \return reference to the last element in the array
+        */
+        constexpr T& back() { return __data[N - 1]; }
+
+        /** \brief return last const element
+        \return reference to the last const element in the array
+        */
+        constexpr const T& back() const { return __data[N - 1]; }
+
         T __data[N]; /** Data store used internally */
     };
 }
