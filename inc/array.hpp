@@ -43,12 +43,12 @@ namespace util
         /** \brief Return a pointer to the internal array 
         \return Pointer of type to C style array
         */
-        constexpr T *data() { return &__data[0]; }
+        constexpr T* data() { return &__data[0]; }
 
         /** \brief Return a const pointer to the internal array 
         \return Const pointer of type to C style array
         */
-        constexpr const T *data() const { return &__data[0]; }
+        constexpr const T* data() const { return &__data[0]; }
 
         /** \brief Indexing operator
         \return reference to the indexed element
@@ -79,6 +79,16 @@ namespace util
         \return reference to the last const element in the array
         */
         constexpr const T& back() const { return __data[N - 1]; }
+
+        /** \brief return begin pointer of array
+        \return pointer to the first element in the array
+        */
+        constexpr T* begin() { return *(&__data[0]); }
+
+        /** \brief return begin pointer of const array
+        \return pointer to the first const element in the array
+        */
+        constexpr const T* begin() const { return *(&__data[0]); }
 
         T __data[N]; /** Data store used internally */
     };
