@@ -93,6 +93,16 @@ namespace util
         */
         constexpr const_iterator begin() const { return &__data[0]; }
 
+        /** \brief return end pointer of array
+        \return pointer beyond the last element in the array
+        */
+        constexpr iterator end() { return &__data[N]; }
+
+        /** \brief return end pointer of const array
+        \return pointer beyond the last const element in the array
+        */
+        constexpr const_iterator end() const { return &__data[N]; }
+
         T __data[N]; /** Data store used internally */
     };
 }
