@@ -31,7 +31,7 @@ namespace util
     struct array 
     {
         using iterator = T*;
-        using const_iterator = const T*; 
+        using const_iterator = const T*;
 
         /** \brief Return size of the array 
         \return Size of the array
