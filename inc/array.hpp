@@ -30,7 +30,9 @@ namespace util
     template<typename T, size_t N>
     struct array 
     {
+        /** \brief Shorthand for defining iterators */
         using iterator = T*;
+        /** \brief Shorthand for defining const iterators */
         using const_iterator = const T*;
 
         /** \brief Return size of the array 
@@ -93,6 +95,11 @@ namespace util
         */
         constexpr const_iterator begin() const { return &__data[0]; }
 
+        /** \brief return begin pointer of const array
+        \return pointer to the first const element in the array
+        */
+        constexpr const_iterator cbegin() const { return &__data[0]; }
+
         /** \brief return end pointer of array
         \return pointer beyond the last element in the array
         */
@@ -103,7 +110,13 @@ namespace util
         */
         constexpr const_iterator end() const { return &__data[N]; }
 
-        T __data[N]; /** Data store used internally */
+        /** \brief return end pointer of const array
+        \return pointer beyond the last const element in the array
+        */
+        constexpr const_iterator cend() const { return &__data[N]; }
+
+        /** \brief Array structure containing data */
+        T __data[N];
     };
 }
 
