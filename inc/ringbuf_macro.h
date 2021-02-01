@@ -25,13 +25,13 @@ extern "C" {
 
 #include <stdbool.h>
 
-#define TEMPLATE_RINGBUF_VARS(name, type, size)                                   \
+#define TEMPLATE_RINGBUF_VARS(name, type, bufsize)                              \
                                                                                 \
     struct                                                                      \
     {                                                                           \
-        int    head;                                                       \
-        int    tail;                                                       \
-        type        name[size];                                                 \
+        unsigned int    head;                                                       \
+        unsigned int    tail;                                                       \
+        type            name[bufsize+1];                                                 \
     }ringbuffer##name;                                                               \
 
 #define TEMPLATE_RINGBUF_PROTO(name, type)                                        \
@@ -45,7 +45,7 @@ static bool name##PopBack(type* p);                                           \
 static bool name##PopFront(type* p);                                          \
 
 
-#define TEMPLATE_RINGBUF_FUNCTIONS(name, type, size)                            \
+#define TEMPLATE_RINGBUF_FUNCTIONS(name, type, bufsize)                            \
                                                                                 \
 void name##Reset(void)                                                   \
 {                                                                               \
@@ -54,7 +54,7 @@ void name##Reset(void)                                                   \
                                                                                 \
 static bool name##Full(void)                                                    \
 {                                                                               \
-    if(ringbuffer##name.head == (ringbuffer##name.tail+1 % size))                         \
+    if(ringbuffer##name.tail == ((ringbuffer##name.head + 1) % (bufsize + 1)))  \
         return true;                                                            \
     else                                                                        \
         return false;                                                           \
@@ -62,24 +62,43 @@ static bool name##Full(void)                                                    
                                                                                 \
 static bool name##Empty(void)                                                   \
 {                                                                               \
-    if(ringbuffer##name.head == ringbuffer##name.tail)                                    \
+    if(ringbuffer##name.head == ringbuffer##name.tail)                          \
         return true;                                                            \
     else                                                                        \
         return false;                                                           \
 }                                                                               \
-                                                                            \
-static bool name##PushBack(type* p)                                          \
-{\
-}\
-static bool name##PushFront(type* p)                                         \
-{\
-}\
+                                                                                \
+static bool name##PushBack(type* p)                                             \
+{                                                                               \
+    unsigned int temp;                                                          \
+    if(ringbuffer##name.tail == 0)\
+        temp = bufsize;\
+    else\
+        temp = ringbuffer##name.tail - 1;\
+    if(ringbuffer##name.head == temp)    \
+        return false;                                                           \
+    ringbuffer##name.tail = temp;          \
+    ringbuffer##name.name[ringbuffer##name.tail] = *p;                          \
+    return true;                                                                \
+}                                                                               \
+                                                                                \
+static bool name##PushFront(type* p)                                            \
+{                                                                               \
+    if(ringbuffer##name.tail == (ringbuffer##name.head + 1) % (bufsize + 1))    \
+        return false;                                                           \
+    ringbuffer##name.head = (ringbuffer##name.head + 1) % (bufsize + 1);        \
+    ringbuffer##name.name[ringbuffer##name.head] = *p;                          \
+    return true;                                                                \
+}                                                                               \
+                                                                                \
 static bool name##PopBack(type* p)                                           \
 {\
 }\
+                                                                                \
 static bool name##PopFront(type* p)                                          \
 {\
 }\
+                                                                                \
 
              
 #ifdef __cplusplus
