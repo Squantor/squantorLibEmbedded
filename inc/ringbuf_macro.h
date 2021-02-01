@@ -71,31 +71,32 @@ static bool name##Empty(void)                                                   
 static bool name##PushBack(type* p)                                             \
 {                                                                               \
     unsigned int temp;                                                          \
-    if(ringbuffer##name.tail == 0)\
-        temp = bufsize;\
-    else\
-        temp = ringbuffer##name.tail - 1;\
-    if(ringbuffer##name.head == temp)    \
+    if(ringbuffer##name.tail == 0)                                              \
+        temp = bufsize;                                                         \
+    else                                                                        \
+        temp = ringbuffer##name.tail - 1;                                       \
+    if(ringbuffer##name.head == temp)                                           \
         return false;                                                           \
-    ringbuffer##name.tail = temp;          \
+    ringbuffer##name.tail = temp;                                               \
     ringbuffer##name.name[ringbuffer##name.tail] = *p;                          \
     return true;                                                                \
 }                                                                               \
                                                                                 \
 static bool name##PushFront(type* p)                                            \
 {                                                                               \
-    if(ringbuffer##name.tail == (ringbuffer##name.head + 1) % (bufsize + 1))    \
+    unsigned int temp =(ringbuffer##name.head + 1) % (bufsize + 1);             \
+    if(ringbuffer##name.tail == temp)                                           \
         return false;                                                           \
-    ringbuffer##name.head = (ringbuffer##name.head + 1) % (bufsize + 1);        \
     ringbuffer##name.name[ringbuffer##name.head] = *p;                          \
+    ringbuffer##name.head = temp;                                               \
     return true;                                                                \
 }                                                                               \
                                                                                 \
-static bool name##PopBack(type* p)                                           \
+static bool name##PopBack(type* p)                                              \
 {\
 }\
                                                                                 \
-static bool name##PopFront(type* p)                                          \
+static bool name##PopFront(type* p)                                             \
 {\
 }\
                                                                                 \
