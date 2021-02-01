@@ -13,7 +13,7 @@
  * TEMPLATE_QUEUE_PROTO(name, type) // generates prototype definitions
  * TEMPLATE_QUEUE_FUNCTIONS(name, type, size) // generates the actual code
  * 
- * This macro based ringbuffer is a poormans template metaprogramming
+ * Using C style template metaprogramming to create type agnostic ringbuffer
  * 
  */ 
 #ifndef RINGBUFFER_MACRO_H
@@ -25,6 +25,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <results.h>
+#include <stdbool.h>
 
 #define TEMPLATE_QUEUE_VARS(name, type, size)                                   \
                                                                                 \
@@ -35,16 +36,20 @@ extern "C" {
         type        name[size];                                                 \
     }queue##name;                                                               \
 
-#define TEMPLATE_QUEUE_PROTO(name, type )                                       \
+#define TEMPLATE_QUEUE_PROTO(name, type)                                        \
                                                                                 \
-static void name##Init(void);                                                   \
-static result name##State(void);                                                \
-static result name##Enqueue(type* p);                                           \
-static result name##Dequeue(type* p);                                           \
+static void name##Reset(void);                                                  \
+static bool name##Full(void);                                                   \
+static bool name##Empty(void);                                                  \
+static result name##PushBack(type* p);                                          \
+static result name##PushFront(type* p);                                         \
+static result name##PopBack(type* p);                                           \
+static result name##PopFront(type* p);                                          \
 
-#define TEMPLATE_QUEUE_FUNCTIONS(name, type, size, mask)                        \
+
+#define TEMPLATE_QUEUE_FUNCTIONS(name, type, size)                              \
                                                                                 \
-static void name##Init(void)                                                    \
+static void name##Reset(void)                                                   \
 {                                                                               \
     queue##name.head = queue##name.tail = 0;                                    \
 }                                                                               \
