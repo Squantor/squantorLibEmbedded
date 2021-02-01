@@ -9,9 +9,9 @@
  * 
  * Macro based ringbuffer implementation, instantiate in the file you want to use 
  * the three macros:
- * TEMPLATE_QUEUE_VARS(name, type, size)
- * TEMPLATE_QUEUE_PROTO(name, type) // generates prototype definitions
- * TEMPLATE_QUEUE_FUNCTIONS(name, type, size) // generates the actual code
+ * TEMPLATE_RINGBUF_VARS(name, type, size)
+ * TEMPLATE_RINGBUF_PROTO(name, type) // generates prototype definitions
+ * TEMPLATE_RINGBUF_FUNCTIONS(name, type, size) // generates the actual code
  * 
  * Using C style template metaprogramming to create type agnostic ringbuffer
  * 
@@ -23,65 +23,64 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <results.h>
 #include <stdbool.h>
 
-#define TEMPLATE_QUEUE_VARS(name, type, size)                                   \
+#define TEMPLATE_RINGBUF_VARS(name, type, size)                                   \
                                                                                 \
     struct                                                                      \
     {                                                                           \
-        uint32_t    head;                                                       \
-        uint32_t    tail;                                                       \
+        int    head;                                                       \
+        int    tail;                                                       \
         type        name[size];                                                 \
-    }queue##name;                                                               \
+    }ringbuffer##name;                                                               \
 
-#define TEMPLATE_QUEUE_PROTO(name, type)                                        \
+#define TEMPLATE_RINGBUF_PROTO(name, type)                                        \
                                                                                 \
 static void name##Reset(void);                                                  \
 static bool name##Full(void);                                                   \
 static bool name##Empty(void);                                                  \
-static result name##PushBack(type* p);                                          \
-static result name##PushFront(type* p);                                         \
-static result name##PopBack(type* p);                                           \
-static result name##PopFront(type* p);                                          \
+static bool name##PushBack(type* p);                                          \
+static bool name##PushFront(type* p);                                         \
+static bool name##PopBack(type* p);                                           \
+static bool name##PopFront(type* p);                                          \
 
 
-#define TEMPLATE_QUEUE_FUNCTIONS(name, type, size)                              \
+#define TEMPLATE_RINGBUF_FUNCTIONS(name, type, size)                            \
                                                                                 \
-static void name##Reset(void)                                                   \
+void name##Reset(void)                                                   \
 {                                                                               \
-    queue##name.head = queue##name.tail = 0;                                    \
+    ringbuffer##name.head = ringbuffer##name.tail = 0;                                    \
 }                                                                               \
                                                                                 \
-static result name##State(void)                                                 \
+static bool name##Full(void)                                                    \
 {                                                                               \
-    if(queue##name.head == queue##name.tail)                                    \
-        return queueEmpty;                                                      \
-    else if(((queue##name.head+1) & mask) == queue##name.tail)                  \
-        return queueFull;                                                       \
+    if(ringbuffer##name.head == (ringbuffer##name.tail+1 % size))                         \
+        return true;                                                            \
     else                                                                        \
-        return queueNotEmpty;                                                   \
+        return false;                                                           \
 }                                                                               \
                                                                                 \
-static result name##Enqueue(type* p)                                            \
+static bool name##Empty(void)                                                   \
 {                                                                               \
-    uint32_t newHead = (queue##name.head+1) & mask;                             \
-    if(newHead == queue##name.tail)                                             \
-        return queueFull;                                                       \
-    queue##name.name[queue##name.head] = *p;                                    \
-    queue##name.head = newHead;                                                 \
-    return noError;                                                             \
+    if(ringbuffer##name.head == ringbuffer##name.tail)                                    \
+        return true;                                                            \
+    else                                                                        \
+        return false;                                                           \
 }                                                                               \
-                                                                                \
-static result name##Dequeue(type* p)                                            \
-{                                                                               \
-    if(queue##name.head == queue##name.tail)                                    \
-        return queueEmpty;                                                      \
-    *p = queue##name.name[queue##name.tail];                                    \
-    queue##name.tail = (queue##name.tail+1) & mask;                             \
-    return noError;                                                             \
-}                                                                               \
+                                                                            \
+static bool name##PushBack(type* p)                                          \
+{\
+}\
+static bool name##PushFront(type* p)                                         \
+{\
+}\
+static bool name##PopBack(type* p)                                           \
+{\
+}\
+static bool name##PopFront(type* p)                                          \
+{\
+}\
+
              
 #ifdef __cplusplus
 }
