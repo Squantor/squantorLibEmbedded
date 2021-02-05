@@ -5,13 +5,13 @@
  * For conditions of distribution and use, see LICENSE file
  */
 /** 
- *\file ringbuf_macro.c
+ *\file ringbuf_macro.h
  * 
  * Macro based ringbuffer implementation, instantiate in the file you want to use 
  * the three macros:
- * TEMPLATE_RINGBUF_VARS(name, type, size)
- * TEMPLATE_RINGBUF_PROTO(name, type) // generates prototype definitions
- * TEMPLATE_RINGBUF_FUNCTIONS(name, type, size) // generates the actual code
+ * RINGBUF_VARS(name, type, size)
+ * RINGBUF_PROTO(name, type) // generates prototype definitions
+ * RINGBUF_FUNCTIONS(name, type, size) // generates the actual code
  * 
  * Using C style template metaprogramming to create type agnostic ringbuffer
  * 
@@ -25,7 +25,7 @@ extern "C" {
 
 #include <stdbool.h>
 
-#define TEMPLATE_RINGBUF_VARS(name, type, bufsize)\
+#define RINGBUF_VARS(name, type, bufsize)\
 \
     struct\
     {\
@@ -34,7 +34,7 @@ extern "C" {
         type            name[bufsize+1];\
     }ringbuffer##name;\
 
-#define TEMPLATE_RINGBUF_PROTO(name, type)\
+#define RINGBUF_PROTO(name, type)\
 \
 static void name##Reset(void);\
 static bool name##Full(void);\
@@ -45,7 +45,7 @@ static bool name##PopBack(type* p);\
 static bool name##PopFront(type* p);\
 
 
-#define TEMPLATE_RINGBUF_FUNCTIONS(name, type, bufsize)\
+#define RINGBUF_FUNCTIONS(name, type, bufsize)\
 \
 void name##Reset(void)\
 {\
