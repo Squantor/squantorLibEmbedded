@@ -106,6 +106,13 @@ static bool name##PopFront(type* p)\
 {\
     if(ringbuffer##name.back == ringbuffer##name.front)\
         return false;\
+    unsigned int temp;\
+    if(ringbuffer##name.front == 0)\
+        temp = bufsize;\
+    else\
+        temp = ringbuffer##name.front - 1;\
+    *p = ringbuffer##name.name[temp];\
+    ringbuffer##name.front = temp;\
     return true;\
 }\
 \
