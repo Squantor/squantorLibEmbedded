@@ -30,7 +30,7 @@ extern "C" {
     struct\
     {\
         unsigned int    front;\
-        unsigned int    tail;\
+        unsigned int    back;\
         type            name[bufsize+1];\
     }ringbuffer##name;\
 
@@ -49,12 +49,12 @@ static bool name##PopFront(type* p);\
 \
 void name##Reset(void)\
 {\
-    ringbuffer##name.front = ringbuffer##name.tail = 0;\
+    ringbuffer##name.front = ringbuffer##name.back = 0;\
 }\
 \
 static bool name##Full(void)\
 {\
-    if(ringbuffer##name.tail == ((ringbuffer##name.front + 1) % (bufsize + 1)))\
+    if(ringbuffer##name.back == ((ringbuffer##name.front + 1) % (bufsize + 1)))\
         return true;\
     else\
         return false;\
@@ -62,7 +62,7 @@ static bool name##Full(void)\
 \
 static bool name##Empty(void)\
 {\
-    if(ringbuffer##name.front == ringbuffer##name.tail)\
+    if(ringbuffer##name.front == ringbuffer##name.back)\
         return true;\
     else\
         return false;\
@@ -71,21 +71,21 @@ static bool name##Empty(void)\
 static bool name##PushBack(type* p)\
 {\
     unsigned int temp;\
-    if(ringbuffer##name.tail == 0)\
+    if(ringbuffer##name.back == 0)\
         temp = bufsize;\
     else\
-        temp = ringbuffer##name.tail - 1;\
+        temp = ringbuffer##name.back - 1;\
     if(ringbuffer##name.front == temp)\
         return false;\
-    ringbuffer##name.tail = temp;\
-    ringbuffer##name.name[ringbuffer##name.tail] = *p;\
+    ringbuffer##name.back = temp;\
+    ringbuffer##name.name[ringbuffer##name.back] = *p;\
     return true;\
 }\
 \
 static bool name##PushFront(type* p)\
 {\
     unsigned int temp =(ringbuffer##name.front + 1) % (bufsize + 1);\
-    if(ringbuffer##name.tail == temp)\
+    if(ringbuffer##name.back == temp)\
         return false;\
     ringbuffer##name.name[ringbuffer##name.front] = *p;\
     ringbuffer##name.front = temp;\
@@ -94,8 +94,12 @@ static bool name##PushFront(type* p)\
 \
 static bool name##PopBack(type* p)\
 {\
-    if(ringbuffer##name.tail == ringbuffer##name.front)\
+    if(ringbuffer##name.back == ringbuffer##name.front)\
         return false;\
+    unsigned int temp = (ringbuffer##name.back + 1) % (bufsize + 1);\
+    *p = ringbuffer##name.name[ringbuffer##name.back];\
+    ringbuffer##name.back = temp;\
+    return true;\
 }\
 \
 static bool name##PopFront(type* p)\
