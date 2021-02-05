@@ -29,8 +29,8 @@ extern "C" {
     {\
         unsigned int    front;\
         type            movingAverage;\
-        type            name[bufsize+1];\
-    }ringbuffer##name;\
+        type            name[bufsize];\
+    }movingAverage##name;\
 
 #define MOVING_AVERAGE_PROTO(name, type)\
 \
@@ -43,13 +43,25 @@ type name##Get(void);\
 \
 void name##Reset(void)\
 {\
+    movingAverage##name.front = 0;\
+    movingAverage##name.movingAverage = 0;\
+    for(int i = 0; i < bufsize; i++)\
+        movingAverage##name.name[i] = 0;\
 }\
 void name##Add(type value)\
 {\
+    movingAverage##name.movingAverage -= movingAverage##name.name[movingAverage##name.front];\
+    movingAverage##name.name[movingAverage##name.front] = value;\
+    movingAverage##name.movingAverage += value;\
+    unsigned int temp = movingAverage##name.front + 1;\
+    if(temp == bufsize)\
+        movingAverage##name.front = 0;\
+    else\
+        movingAverage##name.front = temp;\
 }\
 type name##Get(void)\
 {\
-    return 0;\
+    return movingAverage##name.movingAverage / bufsize;\
 }\
 
 
