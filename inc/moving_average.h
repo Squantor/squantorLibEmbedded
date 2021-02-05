@@ -35,8 +35,8 @@ extern "C" {
 #define MOVING_AVERAGE_PROTO(name, type)\
 \
 void name##Reset(void);\
-void name##Add(void);\
-void name##Get(void);\
+void name##Add(type value);\
+type name##Get(void);\
 
 
 #define MOVING_AVERAGE_FUNCTIONS(name, type, bufsize)\
@@ -44,11 +44,12 @@ void name##Get(void);\
 void name##Reset(void)\
 {\
 }\
-void name##Add(void)\
+void name##Add(type value)\
 {\
 }\
-void name##Get(void)\
+type name##Get(void)\
 {\
+    return 0;\
 }\
 
 
