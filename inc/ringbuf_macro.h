@@ -36,13 +36,13 @@ extern "C" {
 
 #define RINGBUF_PROTO(name, type)\
 \
-static void name##Reset(void);\
-static bool name##Full(void);\
-static bool name##Empty(void);\
-static bool name##PushBack(type* p);\
-static bool name##PushFront(type* p);\
-static bool name##PopBack(type* p);\
-static bool name##PopFront(type* p);\
+void name##Reset(void);\
+bool name##Full(void);\
+bool name##Empty(void);\
+bool name##PushBack(type* p);\
+bool name##PushFront(type* p);\
+bool name##PopBack(type* p);\
+bool name##PopFront(type* p);\
 
 
 #define RINGBUF_FUNCTIONS(name, type, bufsize)\
@@ -52,7 +52,7 @@ void name##Reset(void)\
     ringbuffer##name.front = ringbuffer##name.back = 0;\
 }\
 \
-static bool name##Full(void)\
+bool name##Full(void)\
 {\
     if(ringbuffer##name.back == ((ringbuffer##name.front + 1) % (bufsize + 1)))\
         return true;\
@@ -60,7 +60,7 @@ static bool name##Full(void)\
         return false;\
 }\
 \
-static bool name##Empty(void)\
+bool name##Empty(void)\
 {\
     if(ringbuffer##name.front == ringbuffer##name.back)\
         return true;\
@@ -68,7 +68,7 @@ static bool name##Empty(void)\
         return false;\
 }\
 \
-static bool name##PushBack(type* p)\
+bool name##PushBack(type* p)\
 {\
     unsigned int temp;\
     if(ringbuffer##name.back == 0)\
@@ -82,7 +82,7 @@ static bool name##PushBack(type* p)\
     return true;\
 }\
 \
-static bool name##PushFront(type* p)\
+bool name##PushFront(type* p)\
 {\
     unsigned int temp =(ringbuffer##name.front + 1) % (bufsize + 1);\
     if(ringbuffer##name.back == temp)\
@@ -92,7 +92,7 @@ static bool name##PushFront(type* p)\
     return true;\
 }\
 \
-static bool name##PopBack(type* p)\
+bool name##PopBack(type* p)\
 {\
     if(ringbuffer##name.back == ringbuffer##name.front)\
         return false;\
@@ -102,7 +102,7 @@ static bool name##PopBack(type* p)\
     return true;\
 }\
 \
-static bool name##PopFront(type* p)\
+bool name##PopFront(type* p)\
 {\
     if(ringbuffer##name.back == ringbuffer##name.front)\
         return false;\
