@@ -30,5 +30,6 @@ libEmbedded/src/print/print_decnz_u16.c \
 libEmbedded/src/print/print_decnz_u32.c \
 libEmbedded/src/print/print_dec_u32.c \
 libEmbedded/src/print/print_bin_u32.c \
-libEmbedded/src/parse/parsedigit.c
+libEmbedded/src/parse/parsedigit.c \
+libEmbedded/src/parse/parsedigit.cpp
 
