@@ -104,6 +104,9 @@ static bool name##PopBack(type* p)\
 \
 static bool name##PopFront(type* p)\
 {\
+    if(ringbuffer##name.back == ringbuffer##name.front)\
+        return false;\
+    return true;\
 }\
 \
 
