@@ -23,6 +23,33 @@
 extern "C" {
 #endif
 
+#define MOVING_AVERAGE_VARS(name, type, bufsize)\
+\
+    struct\
+    {\
+        unsigned int    front;\
+        type            movingAverage;\
+        type            name[bufsize+1];\
+    }ringbuffer##name;\
+
+#define MOVING_AVERAGE_PROTO(name, type)\
+\
+void name##Reset(void);\
+void name##Add(void);\
+void name##Get(void);\
+
+
+#define MOVING_AVERAGE_FUNCTIONS(name, type, bufsize)\
+\
+void name##Reset(void)\
+{\
+}\
+void name##Add(void)\
+{\
+}\
+void name##Get(void)\
+{\
+}\
 
 
 #endif
