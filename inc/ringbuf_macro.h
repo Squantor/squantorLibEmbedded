@@ -54,7 +54,10 @@ void name##Reset(void)\
 \
 bool name##Full(void)\
 {\
-    if(ringbuffer##name.back == ((ringbuffer##name.front + 1) % (bufsize + 1)))\
+    unsigned int temp = ringbuffer##name.front + 1;\
+    if(temp == (bufsize + 1))\
+        temp = 0;\
+    if(ringbuffer##name.back == temp)\
         return true;\
     else\
         return false;\
@@ -84,7 +87,9 @@ bool name##PushBack(type* p)\
 \
 bool name##PushFront(type* p)\
 {\
-    unsigned int temp =(ringbuffer##name.front + 1) % (bufsize + 1);\
+    unsigned int temp =(ringbuffer##name.front + 1);\
+    if(temp == bufsize + 1)\
+        temp = 0;\
     if(ringbuffer##name.back == temp)\
         return false;\
     ringbuffer##name.name[ringbuffer##name.front] = *p;\
@@ -96,7 +101,9 @@ bool name##PopBack(type* p)\
 {\
     if(ringbuffer##name.back == ringbuffer##name.front)\
         return false;\
-    unsigned int temp = (ringbuffer##name.back + 1) % (bufsize + 1);\
+    unsigned int temp = ringbuffer##name.back + 1;\
+    if(temp == (bufsize + 1))\
+        temp = 0;\
     *p = ringbuffer##name.name[ringbuffer##name.back];\
     ringbuffer##name.back = temp;\
     return true;\
@@ -117,7 +124,6 @@ bool name##PopFront(type* p)\
 }\
 \
 
-             
 #ifdef __cplusplus
 }
 #endif
