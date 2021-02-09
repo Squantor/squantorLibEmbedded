@@ -24,7 +24,7 @@ namespace util
 
         void reset()
         {
-            for(auto i = buffer.begin(); i != buffer.end(); i++)
+            for(iterator i = buffer.begin(); i != buffer.end(); i++)
                 *i = 0;
             sum = 0;
             front = buffer.begin();
