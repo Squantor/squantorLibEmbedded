@@ -19,7 +19,35 @@ namespace util
 {
     template<typename T, size_t N>
     struct movingAverage {
+        
+        using iterator = T*;
 
+        void reset()
+        {
+            for(T element : buffer)
+                element = 0;
+            sum = 0;
+            front = buffer.begin();
+        }
+
+        void add(T value)
+        {
+            T temp = *front;
+            sum -= temp;
+            *front = value;
+            sum += value;
+            front++;
+            if(front == buffer.end())
+                front = buffer.begin(); 
+        }
+
+        T get()
+        {
+            return sum / N;
+        }
+
+        iterator front;
+        T sum;
         util::array<T, N> buffer;
     };
 }
