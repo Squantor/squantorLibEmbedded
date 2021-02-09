@@ -13,4 +13,16 @@
 #ifndef MOVING_AVERAGE_HPP
 #define MOVING_AVERAGE_HPP
 
+#include <array.hpp>
+
+namespace util
+{
+    template<typename T, size_t N>
+    struct movingAverage {
+
+        util::array<T, N> buffer;
+    };
+}
+
+
 #endif
