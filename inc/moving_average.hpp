@@ -24,8 +24,8 @@ namespace util
 
         void reset()
         {
-            for(T element : buffer)
-                element = 0;
+            for(auto i = buffer.begin(); i != buffer.end(); i++)
+                *i = 0;
             sum = 0;
             front = buffer.begin();
         }
