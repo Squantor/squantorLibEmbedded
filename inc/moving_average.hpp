@@ -18,37 +18,45 @@
 namespace util
 {
     template<typename T, size_t N>
-    struct movingAverage {
+    class MovingAverage {
+    public:
         
         using iterator = T*;
 
+        MovingAverage()
+        {
+            reset();
+        }
+
         void reset()
         {
-            for(iterator i = buffer.begin(); i != buffer.end(); i++)
-                *i = 0;
+            for(auto& v : __data)
+                v = {};
             sum = 0;
-            front = buffer.begin();
+            front = __data.begin();
         }
 
         void add(T value)
         {
-            T temp = *front;
+            auto temp = *front;
             sum -= temp;
             *front = value;
             sum += value;
-            front++;
-            if(front == buffer.end())
-                front = buffer.begin(); 
+            front += 1;
+            if(front == __data.end())
+                front = __data.begin(); 
         }
 
-        T get()
+        const T get()
         {
-            return sum / N;
+            return sum / static_cast<T>(__data.size());
         }
+
+    private:
 
         iterator front;
         T sum;
-        util::array<T, N> buffer;
+        util::array<T, N> __data;
     };
 }
 
