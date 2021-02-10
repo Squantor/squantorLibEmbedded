@@ -7,7 +7,7 @@
 /** 
  *\file ringbuffer.hpp
  * 
- * Implements a ringbuffer
+ * Implements a ringbuffer class
  * 
  */ 
 #ifndef RINGBUFFER_HPP
@@ -34,7 +34,7 @@ namespace util
 
         bool full()
         {
-            auto temp = front + 1;
+            iterator temp = front + 1;
             if(temp == __data.end())
                 temp = __data.begin();
             if(temp == back)
@@ -67,8 +67,8 @@ namespace util
 
         bool PushFront(T& p)
         {
-            auto temp = front + 1;
-            if(temp == __data.end() + 1)
+            iterator temp = front + 1;
+            if(temp == __data.end())
                 temp = __data.begin();
             if(back == temp)
                 return false;
@@ -81,9 +81,9 @@ namespace util
         {
             if(back == front)
                 return false;
-            auto temp = back + 1;
-            if(temp == __data.end() + 1)
-                temp = 0;
+            iterator temp = back + 1;
+            if(temp == __data.end())
+                temp = __data.begin();
             p = *back;
             back = temp;
             return true;
