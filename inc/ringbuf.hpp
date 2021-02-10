@@ -51,10 +51,62 @@ namespace util
                 return false;
         }
 
+        bool PushBack(T& p)
+        {
+            iterator temp;
+            if(back == __data.begin())
+                temp = __data.end() - 1;
+            else
+                temp = back - 1;
+            if(front == temp)
+                return false;
+            back = temp;
+            *back = p;
+            return true;
+        }
+
+        bool PushFront(T& p)
+        {
+            auto temp = front + 1;
+            if(temp == __data.end() + 1)
+                temp = __data.begin();
+            if(back == temp)
+                return false;
+            *front = p;
+            front = temp;
+            return true;
+        }
+
+        bool PopBack(T& p)
+        {
+            if(back == front)
+                return false;
+            auto temp = back + 1;
+            if(temp == __data.end() + 1)
+                temp = 0;
+            p = *back;
+            back = temp;
+            return true;
+        }
+        
+        bool PopFront(T& p)
+        {
+            if(back == front)
+                return false;
+            iterator temp;
+            if(front == __data.begin())
+                temp = __data.end() - 1;
+            else
+                temp = front - 1;
+            p = *temp;
+            front = temp;
+            return true;
+        }
+
     private:
         iterator front;
         iterator back;
-        util::array<T, N> __data;
+        util::array<T, N+1> __data;
     };
 }
 
