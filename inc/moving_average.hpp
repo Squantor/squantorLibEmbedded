@@ -21,7 +21,7 @@ namespace util
     class MovingAverage {
     public:
         
-        using iterator = T*;
+        using iterator = typename util::array<T, N>::iterator;
 
         MovingAverage()
         {
