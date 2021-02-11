@@ -20,93 +20,92 @@ namespace util
     template<typename T, size_t N>
     class RingBuffer {
     public:
+
         using iterator = typename util::array<T, N>::iterator;
+
         RingBuffer()
         {
+            static_assert(N > 0, "ringbuffer size of zero is not allowed!");
             reset();
         }
 
         void reset()
         {
-            front = __data.begin();
-            back = __data.begin();
+            front = data.begin();
+            back = data.begin();
         }
 
         bool full()
         {
-            iterator temp = front + 1;
-            if(temp == __data.end())
-                temp = __data.begin();
-            if(temp == back)
-                return true;
-            else
-                return false;
+            return increment(front) == back;
         }
 
-        bool empty()
+        bool empty() const
         {
-            if(front == back)
-                return true;
-            else
-                return false;
+            return front == back;
         }
 
-        bool PushBack(T& p)
+        bool pushBack(const T& p)
         {
-            iterator temp;
-            if(back == __data.begin())
-                temp = __data.end() - 1;
-            else
-                temp = back - 1;
-            if(front == temp)
+            if(full())
                 return false;
+            auto temp = decrement(back);
             back = temp;
             *back = p;
             return true;
         }
 
-        bool PushFront(T& p)
+        bool pushFront(const T& p)
         {
-            iterator temp = front + 1;
-            if(temp == __data.end())
-                temp = __data.begin();
-            if(back == temp)
+            if(full())
                 return false;
+            auto temp = increment(front);
             *front = p;
             front = temp;
             return true;
         }
 
-        bool PopBack(T& p)
+        bool popBack(T& p)
         {
-            if(back == front)
+            if(empty())
                 return false;
-            iterator temp = back + 1;
-            if(temp == __data.end())
-                temp = __data.begin();
+            auto temp = increment(back);
             p = *back;
             back = temp;
             return true;
         }
         
-        bool PopFront(T& p)
+        bool popFront(T& p)
         {
-            if(back == front)
+            if(empty())
                 return false;
-            iterator temp;
-            if(front == __data.begin())
-                temp = __data.end() - 1;
-            else
-                temp = front - 1;
+            auto temp = decrement(front);
             p = *temp;
             front = temp;
             return true;
         }
 
     private:
-        iterator front;
-        iterator back;
-        util::array<T, N+1> __data;
+
+        iterator decrement(const iterator p)
+        {
+            if(p == data.begin())
+                return data.end() - 1;
+            else
+                return p - 1;
+        }
+
+        iterator increment(const iterator p)
+        {
+            if(p + 1 == data.end())
+                return data.begin();
+            else
+                return p + 1;
+        }
+
+        iterator front;     /**< first element of the ringbuffer */
+        iterator back;      /**< last element of the ringbuffer */
+        util::array<T, N+1> data;   /**< ringbuffer data, one element is added as we need always one element free */
     };
 }
 
