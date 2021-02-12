@@ -64,5 +64,8 @@ type name##Get(void)\
     return movingAverage##name.movingAverage / bufsize;\
 }\
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
