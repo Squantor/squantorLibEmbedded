@@ -23,16 +23,19 @@ namespace util
         
         using iterator = typename util::array<T, N>::iterator;
 
-        MovingAverage()
+        MovingAverage(T value)
         {
-            reset();
+            reset(value);
         }
 
-        void reset()
+        void reset(T value)
         {
-            for(auto& v : __data)
-                v = {};
             sum = 0;
+            for(auto& v : __data)
+            {
+                v = value;
+                sum += value;
+            }
             front = __data.begin();
         }
 
