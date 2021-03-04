@@ -66,31 +66,30 @@ namespace util
     class atomic
     {
       public:
-        /** \brief **/
+        /** \brief default constructor **/
         atomic(T value = {}) noexcept 
         { 
             store(value); 
         }
 
-        /** \brief **/
+        /** \brief deleted **/
         atomic(const atomic& a) = delete;
 
-        /** \brief **/
+        /** \brief deleted **/
         atomic& operator=(const atomic& a) = delete;
         
-        /** \brief 
-        \param value 
-        \param mo
-        \return
+        /** \brief Store value in the atomic object
+        \param value object to be stored
+        \param mo requested memory order
         **/
         void store(T value, memory_order mo = detail::get_default_memory_order()) noexcept
         {
             __atomic_store(&a_value, &value, detail::to_atomic_memorder(mo));
         }
 
-        /** \brief 
-        \param value 
-        \return
+        /** \brief Assignment operator
+        \param value assignment object
+        \return value of the atomic object
         **/
         T operator=(T value) noexcept
         {
@@ -98,9 +97,9 @@ namespace util
             return value;
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief returns value of the atomic object
+        \param mo memory order
+        \return value of the atomic object
         **/
         T load(memory_order mo = detail::get_default_memory_order()) const noexcept
         {
@@ -118,54 +117,54 @@ namespace util
             return load(); 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief adds argument to the atomic object and returns the result
+        \param arg object to add
+        \return result of the addition
         **/
         T fetch_add(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
         {
             return __atomic_fetch_add(&a_value, arg, detail::to_atomic_memorder(mo));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief subtracts argument from the atomic object and returns the result
+        \param arg object to subtract
+        \return result of the subtraction
         **/
         T fetch_sub(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
         {
             return __atomic_fetch_sub(&a_value, arg, detail::to_atomic_memorder(mo));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief performs a bitwise AND with the atomic object and returns the result
+        \param arg object to bitwise AND
+        \return result of the bitwise AND
         **/
         T fetch_and(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
         {
             return __atomic_fetch_and(&a_value, arg, detail::to_atomic_memorder(mo));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief performs a bitwise OR with the atomic object and returns the result
+        \param arg object to bitwise OR
+        \return result of the bitwise OR
         **/
         T fetch_or(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
         {
             return __atomic_fetch_or(&a_value, arg, detail::to_atomic_memorder(mo));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief performs a bitwise XOR with the atomic object and returns the result
+        \param arg object to bitwise XOR
+        \return result of the bitwise XOR
         **/
         T fetch_xor(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
         {
             return __atomic_fetch_xor(&a_value, arg, detail::to_atomic_memorder(mo));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief replace the value of the atomic object and returns the previous object
+        \param value object to exchange
+        \return previously held object
         **/
         T exchange(T value, memory_order mo = detail::get_default_memory_order()) noexcept
         {
