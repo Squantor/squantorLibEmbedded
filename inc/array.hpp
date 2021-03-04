@@ -56,11 +56,13 @@ namespace util
         constexpr const T* data() const { return &__data[0]; }
 
         /** \brief Indexing operator
+        \param n index to the element
         \return reference to the indexed element
         */
         constexpr T& operator[](size_t n) { return __data[n]; }
 
         /** \brief Const indexing operator
+        \param n index to the element
         \return reference to the indexed element used for const arrays
         */
         constexpr const T& operator[](size_t n) const { return __data[n]; }
