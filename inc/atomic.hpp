@@ -119,6 +119,7 @@ namespace util
 
         /** \brief adds argument to the atomic object and returns the result
         \param arg object to add
+        \param mo memory order to execute this operation with
         \return result of the addition
         **/
         T fetch_add(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
@@ -128,6 +129,7 @@ namespace util
 
         /** \brief subtracts argument from the atomic object and returns the result
         \param arg object to subtract
+        \param mo memory order to execute this operation with
         \return result of the subtraction
         **/
         T fetch_sub(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
@@ -137,6 +139,7 @@ namespace util
 
         /** \brief performs a bitwise AND with the atomic object and returns the result
         \param arg object to bitwise AND
+        \param mo memory order to execute this operation with
         \return result of the bitwise AND
         **/
         T fetch_and(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
@@ -146,6 +149,7 @@ namespace util
 
         /** \brief performs a bitwise OR with the atomic object and returns the result
         \param arg object to bitwise OR
+        \param mo memory order to execute this operation with
         \return result of the bitwise OR
         **/
         T fetch_or(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
@@ -155,6 +159,7 @@ namespace util
 
         /** \brief performs a bitwise XOR with the atomic object and returns the result
         \param arg object to bitwise XOR
+        \param mo memory order to execute this operation with
         \return result of the bitwise XOR
         **/
         T fetch_xor(T arg, memory_order mo = detail::get_default_memory_order()) noexcept
@@ -164,6 +169,7 @@ namespace util
 
         /** \brief replace the value of the atomic object and returns the previous object
         \param value object to exchange
+        \param mo memory order to execute this operation with
         \return previously held object
         **/
         T exchange(T value, memory_order mo = detail::get_default_memory_order()) noexcept
@@ -173,9 +179,12 @@ namespace util
             return prev;
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief try and compare and exchange the value
+        \param expected expected value of the comparison
+        \param desired value to load if expected value is found
+        \param success ordering for the load operation if the comparison succeeds
+        \param failure ordering for the load operation if the operation fails
+        \return true if the atomic value has been succesfully changed
         **/
         bool compare_exchange_weak(
             T& expected, T desired, memory_order success, memory_order failure) noexcept
@@ -185,9 +194,11 @@ namespace util
                 detail::to_atomic_memorder(failure));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief try and compare and exchange the value
+        \param expected expected value of the comparison
+        \param desired value to load if expected value is found
+        \param order ordering for both operations
+        \return true if the atomic value has been succesfully changed
         **/
         bool compare_exchange_weak(
             T& expected, T desired,
@@ -196,9 +207,15 @@ namespace util
             return compare_exchange_weak(expected, desired, order, order);
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief try and compare and exchange the value
+        \param expected expected value of the comparison
+        \param desired value to load if expected value is found
+        \param success ordering for the load operation if the comparison succeeds
+        \param failure ordering for the load operation if the operation fails
+        \return true if the atomic value has been succesfully changed
+        
+        The strong version has a higher chance of succeeding then the weak version and is used
+        when you do not want a loop like in the weak version.
         **/
         bool compare_exchange_strong(
             T& expected, T desired, memory_order success, memory_order failure) noexcept
@@ -208,9 +225,14 @@ namespace util
                 detail::to_atomic_memorder(failure));
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief try and compare and exchange the value
+        \param expected expected value of the comparison
+        \param desired value to load if expected value is found
+        \param order ordering for both operations
+        \return true if the atomic value has been succesfully changed
+
+        The strong version has a higher chance of succeeding then the weak version and is used
+        when you do not want a loop like in the weak version.
         **/
         bool compare_exchange_strong(
             T& expected, T desired,
@@ -219,81 +241,77 @@ namespace util
             return compare_exchange_strong(expected, desired, order, order);
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief Prefix increment operator overload
+        \return the incremented value
         **/
         T operator++() noexcept 
         { 
             return fetch_add(T{1}) + T{1}; 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief Prefix increment operator overload
+        \return the incremented value
         **/
         T operator++(int) noexcept 
         { 
             return fetch_add(T{1}); 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief Prefix decrement operator overload
+        \return the decremented value
         **/
         T operator--() noexcept 
         { 
             return fetch_sub(T{1}) - T{1}; 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief Prefix decrement operator overload
+        \return the decremented value
         **/
         T operator--(int) noexcept 
         { 
             return fetch_sub(T{1}); 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief Addition operator overload
+        \param arg value to add to the atomic value
+        \return sum of arg and the atomic value
         **/
         T operator+=(T arg) noexcept 
         { 
             return fetch_add(arg) + arg; 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief Subtraction operator overload
+        \param arg value to subtract from the atomic value
+        \return difference of arg and the atomic value
         **/
         T operator-=(T arg) noexcept 
         { 
             return fetch_sub(arg) - arg; 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief bitwise AND operator overload
+        \param arg value to bitwise AND with the atomic value
+        \return bitwise AND of arg and the atomic value
         **/        
         T operator&=(T arg) noexcept 
         { 
             return fetch_and(arg) & arg; 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief bitwise OR operator overload
+        \param arg value to bitwise OR with the atomic value
+        \return bitwise OR of arg and the atomic value
         **/
         T operator|=(T arg) noexcept 
         { 
             return fetch_or(arg) | arg; 
         }
 
-        /** \brief 
-        \param 
-        \return
+        /** \brief bitwise XOR operator overload
+        \param arg value to bitwise XOR with the atomic value
+        \return bitwise XOR of arg and the atomic value
         **/
         T operator^=(T arg) noexcept 
         { 
@@ -301,6 +319,7 @@ namespace util
         }
 
       private:
+        /** \brief atomic object */
         T a_value;
     };
 }
