@@ -14,7 +14,6 @@
 #define RINGBUFFER_HPP
 
 #include <array.hpp>
-#include <atomic.hpp>
 
 namespace util
 {
@@ -104,8 +103,8 @@ namespace util
                 return p + 1;
         }
 
-        util::atomic<iterator> front;   /**< first element of the ringbuffer */
-        util::atomic<iterator> back;    /**< last element of the ringbuffer */
+        iterator front;             /**< first element of the ringbuffer */
+        iterator back;              /**< last element of the ringbuffer */
         util::array<T, N+1> data;   /**< ringbuffer data, one element is added as we need always one element free */
     };
 }
