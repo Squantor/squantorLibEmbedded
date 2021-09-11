@@ -19,18 +19,21 @@
 
 namespace util
 {
-    template <int xSize, int ySize>
+    template <int xSize, int ySize, int shift>
     struct lcdConfig
     {
-        static const int maxX = xSize;
-        static const int maxY = ySize;
+        static const int maxX = xSize;      /*!< X size of the LCD */
+        static const int maxY = ySize;      /*!< Y size of the LCD */
+        static const int addrShift = shift; /*!< amount of shift for putting address in right spot */
     };
 
-    // few LCD configurations predefined
-    using LS010B7DH04 = lcdConfig<128, 128>;
-    using LS013B4DN04 = lcdConfig<96, 96>;
-    using LS013B7DH05 = lcdConfig<144, 168>;
-    using LS027B7DH01 = lcdConfig<400, 200>;
+    // few example LCD configurations
+    using LS010B7DH04 = lcdConfig<128, 128, 8>;
+    using LS011B7DH03 = lcdConfig<160, 68, 8>;
+    using LS013B4DN04 = lcdConfig<96, 96, 8>;
+    using LS013B7DH05 = lcdConfig<144, 168, 8>;
+    using LS027B7DH01 = lcdConfig<400, 200, 8>;
+    using LS032B7DD02 = lcdConfig<336, 536, 6>;
 
     template <typename config>
     struct sharpMemLcd
@@ -44,21 +47,19 @@ namespace util
             for(uint16_t i = 0; i < config::maxY; i++)
             {
                 // add M0, M1, M2 bits and line addres to beginning of each line entry
-                frameBuffer[computeLineAddres(i)] = 0x8000 | (i+1);
-                // clear dummy word as we will use that as a line update flag
-                frameBuffer[computeLineAddres(i) + (config::maxX/16)+1] = 0x0000;
+                frameBuffer[computeLineAddres(i)] = 0x01 | (i+1) << config::addrShift;
             }
         }
 
         int computeLineAddres(int line)
         {
-            return line * ((config::maxX/16)+2);
+            return line * ((config::maxX/16)+1);
         }
 
         void putPixel(uint16_t x, uint16_t y, uint8_t pixel)
         {
             // compute array index from x, and y coordinates
-            int index = (x / 16) + 1 + (y * ((config::maxX/16)+2));
+            int index = (x / 16) + 1 + (y * ((config::maxX/16)+1));
             if(pixel == 0)
                 frameBuffer[index] = frameBuffer[index] & ~(0x01 << (x & 0xF));
             else
@@ -74,7 +75,7 @@ namespace util
         }
 
         // Adding two 16 bit words per row for spi data setup and teardown
-        array<uint16_t, ((config::maxX/16)+2) * config::maxY> frameBuffer;
+        array<uint16_t, ((config::maxX/16)+1) * config::maxY> frameBuffer;
     };
 
 };
