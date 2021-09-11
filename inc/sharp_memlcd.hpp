@@ -65,6 +65,14 @@ namespace util
                 frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));            
         }
 
+        void flipVcom()
+        {
+            for(uint16_t i = 0; i < config::maxY; i++)
+            {
+                frameBuffer[computeLineAddres(i)] = frameBuffer[computeLineAddres(i)] ^ 0x0002;
+            } 
+        }
+
         // Adding two 16 bit words per row for spi data setup and teardown
         array<uint16_t, ((config::maxX/16)+2) * config::maxY> frameBuffer;
     };
