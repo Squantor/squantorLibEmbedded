@@ -55,6 +55,16 @@ namespace util
             return line * ((config::maxX/16)+2);
         }
 
+        void putPixel(uint16_t x, uint16_t y, uint8_t pixel)
+        {
+            // compute array index from x, and y coordinates
+            int index = (x / 16) + 1 + (y * ((config::maxX/16)+2));
+            if(pixel == 0)
+                frameBuffer[index] = frameBuffer[index] & ~(0x01 << (x & 0xF));
+            else
+                frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));            
+        }
+
         // Adding two 16 bit words per row for spi data setup and teardown
         array<uint16_t, ((config::maxX/16)+2) * config::maxY> frameBuffer;
     };
