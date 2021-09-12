@@ -31,6 +31,7 @@ namespace util
     using LS010B7DH04 = lcdConfig<128, 128, 8>;
     using LS011B7DH03 = lcdConfig<160, 68, 8>;
     using LS013B4DN04 = lcdConfig<96, 96, 8>;
+    using LS013B7DH03 = lcdConfig<128, 128, 8>;
     using LS013B7DH05 = lcdConfig<144, 168, 8>;
     using LS027B7DH01 = lcdConfig<400, 200, 8>;
     using LS032B7DD02 = lcdConfig<336, 536, 6>;
@@ -76,6 +77,8 @@ namespace util
 
         // Adding two 16 bit words per row for spi data setup and teardown
         array<uint16_t, ((config::maxX/16)+1) * config::maxY> frameBuffer;
+        static const uint16_t maxX = config::maxX;
+        static const uint16_t maxY = config::maxY;
     };
 
 };
