@@ -35,7 +35,7 @@ namespace util
     using LS027B7DH01 = lcdConfig<400, 200, 8>;
     using LS032B7DD02 = lcdConfig<336, 536, 6>;
 
-    template <typename config>
+    template <typename config, void dataTransfer(uint16_t *, uint16_t *)>
     struct sharpMemLcd
     {
         void init(void)
