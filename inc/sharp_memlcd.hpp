@@ -66,12 +66,21 @@ namespace util
                 frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));            
         }
 
+        void lcdUpdate()
+        {
+            dataTransfer(frameBuffer.begin(), frameBuffer.end());
+        }
+
         void flipVcom()
         {
+            // update all vcoms in all bits
+            // TODO, change this when doing LCD update with dirty lines
             for(uint16_t i = 0; i < config::maxY; i++)
             {
                 frameBuffer[computeLineAddres(i)] = frameBuffer[computeLineAddres(i)] ^ 0x0002;
-            } 
+            }
+            // the first word of the framebuffer contains always a vcom signal
+            dataTransfer(frameBuffer.begin(), frameBuffer.begin() + 1);
         }
 
         // Adding two 16 bit words per row for spi data setup and teardown
