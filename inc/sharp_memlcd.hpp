@@ -61,8 +61,7 @@ namespace util
 
         void putPixel(uint16_t x, uint16_t y, uint8_t pixel)
         {
-            // compute array index from x, and y coordinates
-            int index = (x / 16) + 1 + (y * ((config::maxX/16)+1));
+            int index = computeColumnAddres(x) + computeLineAddres(y);
             if(pixel == 0)
                 frameBuffer[index] = frameBuffer[index] & ~(0x01 << (x & 0xF));
             else
@@ -103,11 +102,8 @@ namespace util
         // xPos, yPos, blockWidth, blockHeight are in bits!
         void bitBlockTransfer(uint16_t xPos, uint16_t yPos, uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
         {
-            uint8_t *blockPtr = block;
-            for(uint16_t currentX = xPos; currentX < xPos + blockWidth; currentX +=8, blockPtr++)
-            {
-                
-            }
+            // Get it working first with repetative calls to putpixel
+            // then make it a bit more efficient
         }
 
         // Adding two 16 bit words per row for spi data setup and teardown
