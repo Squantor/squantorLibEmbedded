@@ -95,6 +95,17 @@ namespace util
             }
         }
 
+        // xPos, yPos, blockWidth, blockHeight are in bits!
+        void bitBlockTransfer(uint16_t xPos, uint16_t yPos, uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
+        {
+            size_t frameBufIndex = (xPos + 1) + (yPos * (config::maxX + 1));
+            // ystep
+                // xstep
+                    // copy from block with the bits
+
+            
+        }
+
         // Adding two 16 bit words per row for spi data setup and teardown
         array<uint16_t, ((config::maxX/16)+1) * config::maxY> frameBuffer;
         static const uint16_t maxX = config::maxX;
