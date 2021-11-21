@@ -23,9 +23,9 @@ namespace util
     template <int xSize, int ySize, int shift>
     struct lcdConfig
     {
-        static const int maxX = xSize;      /*!< X size of the LCD */
-        static const int maxY = ySize;      /*!< Y size of the LCD */
-        static const int addrShift = shift; /*!< amount of shift for putting address in right spot */
+        static constexpr inline auto maxX = xSize;      /*!< X size of the LCD */
+        static constexpr inline auto maxY = ySize;      /*!< Y size of the LCD */
+        static constexpr inline auto addrShift = shift; /*!< amount of shift for putting address in right spot */
     };
 
     // few example LCD configurations
@@ -49,9 +49,14 @@ namespace util
             setBuffer(0x0000);
         }
 
-        int computeLineAddres(int line)
+        int computeLineAddres(uint16_t line)
         {
             return line * ((config::maxX/16)+1);
+        }
+
+        int computeColumnAddres(uint16_t column)
+        {
+            return (column/16) + 1;
         }
 
         void putPixel(uint16_t x, uint16_t y, uint8_t pixel)
@@ -98,12 +103,11 @@ namespace util
         // xPos, yPos, blockWidth, blockHeight are in bits!
         void bitBlockTransfer(uint16_t xPos, uint16_t yPos, uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
         {
-            size_t frameBufIndex = (xPos + 1) + (yPos * (config::maxX + 1));
-            // ystep
-                // xstep
-                    // copy from block with the bits
-
-            
+            uint8_t *blockPtr = block;
+            for(uint16_t currentX = xPos; currentX < xPos + blockWidth; currentX +=8, blockPtr++)
+            {
+                
+            }
         }
 
         // Adding two 16 bit words per row for spi data setup and teardown
