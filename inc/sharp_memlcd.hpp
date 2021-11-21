@@ -37,7 +37,7 @@ namespace util
     using LS027B7DH01 = lcdConfig<400, 200, 8>;
     using LS032B7DD02 = lcdConfig<336, 536, 6>;
 
-    template <typename config, void dataTransfer(uint16_t *, uint16_t *)>
+    template <typename config>
     struct sharpMemLcd
     {
         void init(void)
@@ -69,12 +69,12 @@ namespace util
                 frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));            
         }
 
-        void lcdUpdate()
+        void lcdUpdate(auto xferFunction)
         {
-            dataTransfer(frameBuffer.begin(), frameBuffer.end());
+            xferFunction(frameBuffer.begin(), frameBuffer.end());
         }
 
-        void flipVcom()
+        void flipVcom(auto xferFunction)
         {
             // update all vcoms in all bits
             // TODO, change this when doing LCD update with dirty lines
@@ -83,7 +83,7 @@ namespace util
                 frameBuffer[computeLineAddres(i)] = frameBuffer[computeLineAddres(i)] ^ 0x0002;
             }
             // the first word of the framebuffer contains always a vcom signal
-            dataTransfer(frameBuffer.begin(), frameBuffer.begin() + 1);
+            xferFunction(frameBuffer.begin(), frameBuffer.begin() + 1);
         }
 
         void setBuffer(uint16_t value)
