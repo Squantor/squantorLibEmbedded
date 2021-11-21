@@ -15,6 +15,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <cstring>
 #include <array.hpp>
 
 namespace util
@@ -44,12 +45,8 @@ namespace util
             static_assert(config::maxX > 0, "display cant have zero X");
             static_assert(config::maxY > 0, "display cant have zero Y");
             // TODO static asserts if display X is not multiple of 16
-            // initialize the LCD specific data of the framebuffer
-            for(uint16_t i = 0; i < config::maxY; i++)
-            {
-                // add M0, M1, M2 bits and line addres to beginning of each line entry
-                frameBuffer[computeLineAddres(i)] = 0x01 | (i+1) << config::addrShift;
-            }
+            // clear the buffer, it also sets up the sharp additional bits
+            setBuffer(0x0000);
         }
 
         int computeLineAddres(int line)
@@ -82,6 +79,20 @@ namespace util
             }
             // the first word of the framebuffer contains always a vcom signal
             dataTransfer(frameBuffer.begin(), frameBuffer.begin() + 1);
+        }
+
+        void setBuffer(uint16_t value)
+        {
+            for(uint16_t &frameData : frameBuffer)
+            {
+                frameData = value;
+            }
+
+            for(uint16_t i = 0; i < config::maxY; i++)
+            {
+                // add M0, M1, M2 bits and line addres to beginning of each line entry
+                frameBuffer[computeLineAddres(i)] = 0x01 | (i+1) << config::addrShift;
+            }
         }
 
         // Adding two 16 bit words per row for spi data setup and teardown
