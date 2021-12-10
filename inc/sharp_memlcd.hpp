@@ -15,7 +15,7 @@
 
 #include <cstdint>
 #include <cstddef>
-#include <cstring>
+#include <string.h>
 #include <array.hpp>
 
 namespace util
