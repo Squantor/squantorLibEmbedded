@@ -68,6 +68,13 @@ namespace util
                 frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));            
         }
 
+        uint8_t getPixel(uint8_t *block, uint16_t blockWidth, uint16_t x, uint16_t y)
+        {
+            uint8_t mask = 1 << (x & 0x07);
+            int index = (x / 8) + (y * (blockWidth / 8));
+            return (block[index] & mask);
+        }
+
         void lcdUpdate(auto xferFunction)
         {
             xferFunction(frameBuffer.begin(), frameBuffer.end());
@@ -102,8 +109,24 @@ namespace util
         // xPos, yPos, blockWidth, blockHeight are in bits!
         void bitBlockTransfer(uint16_t xPos, uint16_t yPos, uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
         {
-            // Get it working first with repetative calls to putpixel
-            // then make it a bit more efficient
+            uint16_t destX;
+            uint16_t destY = yPos;
+            for(uint16_t sourceY = 0; sourceY < blockHeight; sourceY++)
+            {   
+                destX = xPos;
+                for(uint16_t sourceX = 0; sourceX < blockWidth; sourceX++)
+                {
+                    uint8_t pixel = getPixel(block, blockWidth, sourceX, sourceY);
+                    putPixel(destX, destY, pixel);
+                    destX++;
+                    // bounds check
+                    if(destX == maxX)
+                        break;
+                }
+                destY++;
+                if(destY == maxY)
+                    break;
+            }
         }
 
         // Adding two 16 bit words per row for spi data setup and teardown
