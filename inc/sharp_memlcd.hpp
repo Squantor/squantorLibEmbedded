@@ -34,7 +34,7 @@ namespace util
     using LS013B4DN04 = lcdConfig<96, 96, 8>;
     using LS013B7DH03 = lcdConfig<128, 128, 8>;
     using LS013B7DH05 = lcdConfig<144, 168, 8>;
-    using LS027B7DH01 = lcdConfig<400, 200, 8>;
+    using LS027B7DH01 = lcdConfig<400, 240, 8>;
     using LS032B7DD02 = lcdConfig<336, 536, 6>;
 
     template <typename config>
