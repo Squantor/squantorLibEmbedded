@@ -68,7 +68,7 @@ namespace util
                 frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));            
         }
 
-        uint8_t getPixel(uint8_t *block, uint16_t blockWidth, uint16_t x, uint16_t y)
+        uint8_t getPixel(const uint8_t *block, uint16_t blockWidth, uint16_t x, uint16_t y)
         {
             uint8_t mask = 1 << (x & 0x07);
             int index = (x / 8) + (y * (blockWidth / 8));
@@ -107,7 +107,7 @@ namespace util
         }
 
         // xPos, yPos, blockWidth, blockHeight are in bits!
-        void bitBlockTransfer(uint16_t xPos, uint16_t yPos, uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
+        void bitBlockTransfer(uint16_t xPos, uint16_t yPos, const uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
         {
             uint16_t destX;
             uint16_t destY = yPos;
