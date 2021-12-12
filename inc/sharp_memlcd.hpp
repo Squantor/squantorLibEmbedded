@@ -107,7 +107,7 @@ namespace util
         }
 
         // xPos, yPos, blockWidth, blockHeight are in bits!
-        void bitBlockTransfer(uint16_t xPos, uint16_t yPos, const uint8_t *block, uint16_t blockWidth, uint16_t blockHeight)
+        void bitBlockTransfer(uint16_t xPos, uint16_t yPos, const uint8_t *block, uint16_t blockWidth, uint16_t blockHeight, bool invert = false)
         {
             uint16_t destX;
             uint16_t destY = yPos;
@@ -117,6 +117,8 @@ namespace util
                 for(uint16_t sourceX = 0; sourceX < blockWidth; sourceX++)
                 {
                     uint8_t pixel = getPixel(block, blockWidth, sourceX, sourceY);
+                    if(invert)
+                        pixel = !pixel;
                     putPixel(destX, destY, pixel);
                     destX++;
                     // bounds check
