@@ -31,5 +31,6 @@ squantorLibEmbedded/src/print/print_decnz_u32.c \
 squantorLibEmbedded/src/print/print_dec_u32.c \
 squantorLibEmbedded/src/print/print_bin_u32.c \
 squantorLibEmbedded/src/parse/parsedigit.c \
-squantorLibEmbedded/src/parse/parsedigit.cpp
+squantorLibEmbedded/src/parse/parsedigit.cpp \
+squantorLibEmbedded/src/font/font_8x8.c
 
