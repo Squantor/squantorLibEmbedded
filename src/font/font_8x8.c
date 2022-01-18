@@ -6,7 +6,7 @@
  */
 #include <font_8x8.h>
 
-const uint16_t ascii2font8x8[] = {
+const uint16_t ascii2font8x8[128] = {
   0,    // U+0000 (null)
   0,    // U+0001 (SOH)
   0,    // U+0002 (STX)
@@ -137,7 +137,7 @@ const uint16_t ascii2font8x8[] = {
   0,    // U+007F (DEL)
 };
 
-const uint8_t font8x8[] = {
+const uint8_t font8x8[760] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0020 (space)
   0x18, 0x3C, 0x3C, 0x18, 0x18, 0x00, 0x18, 0x00,  // U+0021 (!)
   0x36, 0x36, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0022 (")

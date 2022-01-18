@@ -13,9 +13,10 @@
 extern "C" {
 #endif
 
-extern const uint16_t ascii2font8x8[];
-
-extern const uint8_t font8x8[];
+/*!< \brief provides index of which ascii character is at what font bitmap index */
+extern const uint16_t ascii2font8x8[128];
+/*!< \brief 8 by 8 pixel size font bitmap */
+extern const uint8_t font8x8[760];
 
 #ifdef __cplusplus
 }
