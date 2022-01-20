@@ -20,7 +20,7 @@ extern "C" {
 /*!< \brief provides index of which ascii character is at what font bitmap index */
 extern const uint16_t ascii2font8x8Index[128];
 /*!< \brief 8 by 8 pixel size font bitmap */
-extern const uint8_t font8x8[760];
+extern const uint8_t font8x8Horizontal[760];
 
 /*! \brief maps ascii characters to bitmap
  * Returns a pointer into a bitmap array that contains 8 by 8 font characters.
@@ -28,8 +28,8 @@ extern const uint8_t font8x8[760];
  * \param asciiChar ASCII character to transform, maximum value 127
  * \return pointer to a 8 by 8 bitmap corresponding to the ASCII character
  */
-static inline const uint8_t* ascii2Font8x8(uint8_t asciiChar) {
-  return &font8x8[ascii2font8x8Index[asciiChar]];
+static inline const uint8_t* ascii2Font8x8(const uint8_t* font8x8, uint8_t asciiChar) {
+  return font8x8 + ascii2font8x8Index[asciiChar];
 }
 
 #ifdef __cplusplus
