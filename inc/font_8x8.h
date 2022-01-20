@@ -17,12 +17,10 @@
 extern "C" {
 #endif
 
-/*!< \brief provides index of which ascii character is at what font bitmap index */
-extern const uint16_t ascii2font8x8Index[128];
-/*!< \brief horizontal 8 by 8 pixel size font bitmap */
-extern const uint8_t font8x8Horizontal[760];
-/*!< \brief vertical 8 by 8 pixel size font bitmap */
-extern const uint8_t font8x8Vertical[760];
+extern const uint16_t ascii2font8x8Index[128];    /*!< indexes of ascii character is where in a 8x8 font bitmap */
+extern const uint8_t font8x8Horizontal[760];      /*!< horizontal top down 8 by 8 pixel size font bitmap */
+extern const uint8_t font8x8Vertical[760];        /*!< vertical 8 by 8 pixel size font bitmap */
+extern const uint8_t font8x8VerticalFlipped[760]; /*!< flipped vertical 8 by 8 pixel size font bitmap */
 
 /*! \brief maps ascii characters to bitmap
  * Returns a pointer into a bitmap array that contains 8 by 8 font characters.
