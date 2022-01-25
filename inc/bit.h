@@ -15,6 +15,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*! \brief "Zooms" into an 8 bit integer to a 16 bit integer
  *
  * The zooming process is best described that each bit is doubled up and then shifted into its position
@@ -23,5 +27,9 @@
  * \return expanded uint8_t data
  */
 uint16_t bitZoom(uint8_t byte);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
