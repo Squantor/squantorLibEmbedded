@@ -37,12 +37,6 @@ void pulseDensityInit(pulseDensityModulator *modulator, uint32_t threshold, uint
  */
 bool pulseDensityOutput(pulseDensityModulator *modulator);
 
-/** \brief sets the pulse density modulator step size
- * \param modulator Pointer to the pulse density modulator
- * \param step step value of the pulse density modulator
- */
-void pulseDensitySetStep(pulseDensityModulator *modulator, uint32_t step);
-
 #ifdef __cplusplus
 }
 #endif

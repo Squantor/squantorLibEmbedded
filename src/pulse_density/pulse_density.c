@@ -16,6 +16,12 @@ void pulseDensityInit(pulseDensityModulator *modulator, uint32_t threshold, uint
   modulator->step = step;
 }
 
-bool pulseDensityOutput(pulseDensityModulator *modulator) {}
-
-void pulseDensitySetStep(pulseDensityModulator *modulator, uint32_t step) {}
+bool pulseDensityOutput(pulseDensityModulator *modulator) {
+  modulator->sum += modulator->step;
+  if (modulator->sum > modulator->threshold) {
+    modulator->sum -= modulator->threshold;
+    return true;
+  } else {
+    return false;
+  }
+}
