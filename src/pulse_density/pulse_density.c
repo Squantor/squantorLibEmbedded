@@ -10,7 +10,11 @@
  */
 #include <pulse_density.h>
 
-void pulseDensityInit(pulseDensityModulator *modulator, uint32_t threshold, uint32_t step) {}
+void pulseDensityInit(pulseDensityModulator *modulator, uint32_t threshold, uint32_t step) {
+  modulator->sum = 0;
+  modulator->threshold = threshold;
+  modulator->step = step;
+}
 
 bool pulseDensityOutput(pulseDensityModulator *modulator) {}
 
