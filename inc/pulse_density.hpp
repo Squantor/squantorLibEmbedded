@@ -11,12 +11,4 @@
 #ifndef PULSE_DENSITY_HPP
 #define PULSE_DENSITY_HPP
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
-
 #endif
