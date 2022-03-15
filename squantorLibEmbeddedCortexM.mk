@@ -7,9 +7,12 @@
 # squantorLibEmbedded library settings
 # Arm specific files
 #
-# Version: 20200814
+# Version: 20220315
 
 # library files and includes, assuming you also add squantorLibEmbedded
 
-FILES += 
+# library files and includes
+INCLUDES += -IsquantorLibEmbedded/inc/cortexM
+
+FILES += squantorLibEmbedded/src/cortexM/delay_cycles.c
 
