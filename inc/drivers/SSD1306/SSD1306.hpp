@@ -161,6 +161,18 @@ const uint8_t init128x32[] = {SSD1306::displaySleep,
                               SSD1306::displayNormal,
                               SSD1306::scrollOff,
                               SSD1306::displayActive};
+
+template <int xSize, int ySize, const uint8_t *initCommands, size_t initCommandLength>
+struct SSD1306Config {
+  static constexpr inline auto maxX = xSize;                   /*!< X size of the display */
+  static constexpr inline auto maxY = ySize;                   /*!< Y size of the display */
+  static constexpr inline auto init = initCommands;            /*!< init commands for display */
+  static constexpr inline auto initLength = initCommandLength; /*!< length of init commands */
+};
+
+using standard128x64 = SSD1306Config<128, 64, init128x64, sizeof(init128x64)>;
+using standard128x32 = SSD1306Config<128, 32, init128x32, sizeof(init128x32)>;
+
 }  // namespace SSD1306
 }  // namespace util
 
