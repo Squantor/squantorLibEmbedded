@@ -80,15 +80,20 @@ struct display {
   }
 
   void writeWindow(uint8_t xBegin, uint8_t xEnd, uint8_t yBegin, uint8_t yEnd, const uint8_t *data, uint16_t length) {
-    uint8_t setPointer[] = {
-      SSD1306::setPageAddress, (uint8_t)(yBegin >> 3), (uint8_t)(yEnd >> 3), SSD1306::setColumnAddress, xBegin, xEnd};
-    sendCommands(setPointer, sizeof(setPointer));
-    sendData(data, length);
+    for (int i = yBegin; i < yEnd; i++) {
+      for (int j = xBegin; j < xEnd; j++) {
+        int index = 
+      }
+    }
   }
 
-  void update() {}
+  void update() {
+    uint8_t setPointer[] = {SSD1306::setPageAddress, 0, maxY >> 3, SSD1306::setColumnAddress, 0, maxX};
+    sendCommands(setPointer, sizeof(setPointer));
+    sendData(frameBuffer.data(), frameBuffer.size());
+  }
 
-  array<uint16_t, ((config::maxX / 8) + 1) * config::maxY> frameBuffer;
+  array<uint8_t, ((config::maxX / 8) + 1) * config::maxY> frameBuffer;
   static const uint8_t maxX = config::maxX;
   static const uint8_t maxY = config::maxY;
 };

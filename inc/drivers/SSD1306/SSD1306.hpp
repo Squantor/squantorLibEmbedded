@@ -170,8 +170,8 @@ struct SSD1306Config {
   static constexpr inline auto initLength = initCommandLength; /*!< length of init commands */
 };
 
-using standard128x64 = SSD1306Config<128, 64, init128x64, sizeof(init128x64)>;
-using standard128x32 = SSD1306Config<128, 32, init128x32, sizeof(init128x32)>;
+using standard128x64 = SSD1306Config<127, 63, init128x64, sizeof(init128x64)>;
+using standard128x32 = SSD1306Config<127, 31, init128x32, sizeof(init128x32)>;
 
 }  // namespace SSD1306
 }  // namespace util
