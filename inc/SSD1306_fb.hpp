@@ -84,20 +84,24 @@ struct display {
     int normYEnd = yEnd >> 3;
     for (int i = normYBegin; i <= normYEnd; i++) {
       for (int j = xBegin; j <= xEnd; j++) {
-        int index = i * (maxX + 1) + j;
+        int index = i * (maxX) + j;
         frameBuffer[index] = *data;
         ++data;
+        --length;
+        if (length == 0) {
+          return;
+        }
       }
     }
   }
 
   void update() {
-    uint8_t setPointer[] = {SSD1306::setPageAddress, 0, maxY >> 3, SSD1306::setColumnAddress, 0, maxX};
+    uint8_t setPointer[] = {SSD1306::setPageAddress, 0, (maxY - 1) >> 3, SSD1306::setColumnAddress, 0, maxX - 1};
     sendCommands(setPointer, sizeof(setPointer));
     sendData(frameBuffer.data(), frameBuffer.size());
   }
 
-  array<uint8_t, ((config::maxY + 1) / 8) * (config::maxX + 1)> frameBuffer;
+  array<uint8_t, ((config::maxY) / 8) * (config::maxX)> frameBuffer;
   static const uint8_t maxX = config::maxX;
   static const uint8_t maxY = config::maxY;
 };
