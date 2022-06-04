@@ -9,8 +9,8 @@ For conditions of distribution and use, see LICENSE file
 
 #include <cstdint>
 #include <cstddef>
-#include <drivers/SSD1306/SSD1306.hpp>
-#include <array.hpp>
+#include "drivers/SSD1306/SSD1306.hpp"
+#include "array.hpp"
 
 namespace util {
 namespace SSD1306 {
@@ -80,9 +80,13 @@ struct display {
   }
 
   void writeWindow(uint8_t xBegin, uint8_t xEnd, uint8_t yBegin, uint8_t yEnd, const uint8_t *data, uint16_t length) {
-    for (int i = yBegin; i < yEnd; i++) {
-      for (int j = xBegin; j < xEnd; j++) {
-        int index = 
+    int normYBegin = yBegin >> 3;
+    int normYEnd = yEnd >> 3;
+    for (int i = normYBegin; i <= normYEnd; i++) {
+      for (int j = xBegin; j <= xEnd; j++) {
+        int index = i * (maxX + 1) + j;
+        frameBuffer[index] = *data;
+        ++data;
       }
     }
   }
@@ -93,7 +97,7 @@ struct display {
     sendData(frameBuffer.data(), frameBuffer.size());
   }
 
-  array<uint8_t, ((config::maxX / 8) + 1) * config::maxY> frameBuffer;
+  array<uint8_t, ((config::maxY + 1) / 8) * (config::maxX + 1)> frameBuffer;
   static const uint8_t maxX = config::maxX;
   static const uint8_t maxY = config::maxY;
 };
