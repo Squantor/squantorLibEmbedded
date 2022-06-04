@@ -14,8 +14,12 @@ For conditions of distribution and use, see LICENSE file
 namespace util {
 namespace SSD1306 {
 
-template <uint8_t i2cAddress>
+template <uint8_t i2cAddress, typename config>
 struct display {
+  void init() {
+    sendCommands(config::init, config::initLength);
+  }
+
   uint32_t startI2CTransfer(I2C_Type *peripheral, uint8_t address) {
     uint32_t busStatus;
     i2cSetMasterData(peripheral, address);
