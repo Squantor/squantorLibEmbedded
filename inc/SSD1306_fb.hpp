@@ -101,6 +101,10 @@ struct display {
     sendData(frameBuffer.data(), frameBuffer.size());
   }
 
+  void clear(uint8_t clearColor) {
+    for (uint8_t data : frameBuffer) data = clearColor;
+  }
+
   array<uint8_t, ((config::maxY) / 8) * (config::maxX)> frameBuffer;
   static const uint8_t maxX = config::maxX;
   static const uint8_t maxY = config::maxY;
