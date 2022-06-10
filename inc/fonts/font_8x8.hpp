@@ -16,5 +16,6 @@
 extern font mono8x8Col;
 extern font mono8x8Row;
 extern font mono8x8RowFlip;
+extern font mono8x8SkinnyRowFlip;
 
 #endif
