@@ -16,8 +16,12 @@
 struct font {
   const uint16_t xSize;
   const uint16_t ySize;
-  const uint8_t *fontBitmap;
-  const uint16_t *ascii2index;
+  const uint8_t* const fontBitmap;
+  const uint16_t* const ascii2index;
 };
+
+static inline const uint8_t* ascii2Font(const font* fontData, uint8_t asciiChar) {
+  return fontData->fontBitmap + fontData->ascii2index[asciiChar];
+}
 
 #endif

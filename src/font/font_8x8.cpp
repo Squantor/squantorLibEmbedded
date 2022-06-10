@@ -333,7 +333,7 @@ const uint8_t font8x8Row[760] = {
   0x00, 0x01, 0x03, 0x02, 0x03, 0x01, 0x03, 0x02,  // U+007E (~)
 };
 
-const uint8_t font8x8VerticalFlipped[760] = {
+const uint8_t font8x8RowFlipped[760] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0020 (space)
   0x00, 0x00, 0x06, 0x5F, 0x5F, 0x06, 0x00, 0x00,  // U+0021 (!)
   0x00, 0x03, 0x03, 0x00, 0x03, 0x03, 0x00, 0x00,  // U+0022 (")
@@ -431,5 +431,6 @@ const uint8_t font8x8VerticalFlipped[760] = {
   0x02, 0x03, 0x01, 0x03, 0x02, 0x03, 0x01, 0x00,  // U+007E (~)
 };
 
-font mono8x8col{8, 8, font8x8Col, ascii2font8x8Index};
-font mono8x8row{8, 8, font8x8Row, ascii2font8x8Index};
+font mono8x8Col{8, 8, font8x8Col, ascii2font8x8Index};
+font mono8x8Row{8, 8, font8x8Row, ascii2font8x8Index};
+font mono8x8RowFlip{8, 8, font8x8RowFlipped, ascii2font8x8Index};
