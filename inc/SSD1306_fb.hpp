@@ -102,7 +102,7 @@ struct display {
   }
 
   void clear(uint8_t clearColor) {
-    for (uint8_t data : frameBuffer) data = clearColor;
+    for (uint8_t &data : frameBuffer) data = clearColor;
   }
 
   array<uint8_t, ((config::maxY) / 8) * (config::maxX)> frameBuffer;
