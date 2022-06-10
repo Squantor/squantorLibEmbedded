@@ -16,7 +16,7 @@
 struct font {
   const uint16_t xSize;
   const uint16_t ySize;
-  const std::byte *fontBitmap;
+  const uint8_t *fontBitmap;
   const uint16_t *ascii2index;
 };
 

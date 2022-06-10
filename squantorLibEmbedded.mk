@@ -32,7 +32,7 @@ squantorLibEmbedded/src/print/print_dec_u32.c \
 squantorLibEmbedded/src/print/print_bin_u32.c \
 squantorLibEmbedded/src/parse/parsedigit.c \
 squantorLibEmbedded/src/parse/parsedigit.cpp \
-squantorLibEmbedded/src/font/font_8x8.c \
+squantorLibEmbedded/src/font/font_8x8.cpp \
 squantorLibEmbedded/src/bit/bitzoom.c \
 squantorLibEmbedded/src/pulse_density/pulse_density.c \
 squantorLibEmbedded/src/pulse_density/pulse_density.cpp

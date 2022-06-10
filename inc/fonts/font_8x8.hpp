@@ -8,11 +8,12 @@
  *  \brief definition of 8 by 8 column oriented font
  *
  */
-#ifndef FONT_8X8COL_H
-#define FONT_8X8COL_H
+#ifndef FONT_8X8COL_HPP
+#define FONT_8X8COL_HPP
 
 #include <fonts/font.hpp>
 
 extern font mono8x8col;
+extern font mono8x8row;
 
 #endif
