@@ -35,5 +35,6 @@ squantorLibEmbedded/src/parse/parsedigit.cpp \
 squantorLibEmbedded/src/font/font_8x8.cpp \
 squantorLibEmbedded/src/bit/bitzoom.c \
 squantorLibEmbedded/src/pulse_density/pulse_density.c \
-squantorLibEmbedded/src/pulse_density/pulse_density.cpp
+squantorLibEmbedded/src/pulse_density/pulse_density.cpp \
+squantorLibEmbedded/src/bit/bitblit1d.cpp
 
