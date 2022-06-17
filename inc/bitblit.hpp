@@ -28,7 +28,7 @@ enum class bitblitOperation { OP_NONE, OP_NOT, OP_AND, OP_OR, OP_XOR };
  * @param src       source buffer
  * @param srcSize   sourcebuffer size in bits
  */
-void bitblit1d(uint8_t *dest, size_t destSize, int destPos, uint8_t *src, int srcSize);
+void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize);
 
 };  // namespace util
 
