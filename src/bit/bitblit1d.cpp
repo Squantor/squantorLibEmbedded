@@ -17,9 +17,7 @@ namespace util {
 // TODO change from indices to pointer math
 // TODO change to zero checks
 void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize) {
-  // start of bitblit
-  // compute limits as we will write out of the buffer somehow and this will be common!
-  // compute indexes
+  // compute indexes and limits
   unsigned int srcIndex = 0;
   unsigned int destIndex = destPos / 8;
   unsigned int destBit = destPos & 7;
@@ -34,15 +32,15 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
   // compute mask
   uint8_t mask = 0xFF << destBit;
   uint8_t data;
-  // start
+  // starting stage
   data = dest[destIndex] & ~mask;
   dest[destIndex] = data | (src[srcIndex] << destBit);
   destIndex++;
   // iteration
   while (destIndex != destIndexEnd) {
-    // TODO: extract aligned access, RMW is redundant for it
+    // TODO: extract array aligned access, RMW is redundant for it
     // but do not forget the last dangling bits in that case!
-    if (mask != 0xFF)  // aligned access, this is not needed
+    if (mask != 0xFF)  // array aligned access, this is not needed
     {
       data = dest[destIndex] & mask;
       dest[destIndex] = data | (src[srcIndex] >> (8 - destBit));
@@ -52,11 +50,21 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
     dest[destIndex] = data | (src[srcIndex] << destBit);
     destIndex++;
   }
-  // end
-  // check for aligned access and writing over boundary
-  if ((mask != 0xFF) && (destIndexEnd != destSize)) {
-    data = dest[destIndex] & mask;
-    dest[destIndex] = data | (src[srcIndex] >> (8 - destBit));
+  // end stage
+  // check if the end operation would write over boundary
+  if ((destIndexEnd != destSize)) {
+    // check for array aligned access
+    if ((mask != 0xFF)) {
+      data = dest[destIndex] & mask;
+      dest[destIndex] = data | (src[srcIndex] >> (8 - destBit));
+      // aligned access but we have some remaining bits
+    } else if (srcSize & 7) {
+      unsigned int srcRemaining = srcSize & 7;
+      mask = 0xFF << srcRemaining;
+      srcIndex++;
+      data = dest[destIndex] & mask;
+      dest[destIndex] = data | (src[srcIndex] & ~mask);
+    }
   }
 }
 
