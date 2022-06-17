@@ -15,21 +15,21 @@
 
 namespace util {
 
-// WIP change to zero checks and remove indexes
 void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize) {
   // compute indexes and limits
   bool alignedWrites = (destPos & 7) == 0;
-  unsigned int destOffset = destPos == 0 ? 0 : 1;  // fixup one element if we have aligned writes
   unsigned int count = srcSize / 8;
-  unsigned int destIndex = destPos / 8;
+  // clamp index and abort last write
+  bool abortLastWrite = false;
+  if ((srcSize + destPos) / 8 >= destSize) {
+    count = destSize - (destPos / 8);
+    abortLastWrite = true;
+  };
+  if (count > 0 && !alignedWrites) count--;
   dest = dest + destPos / 8;
-  unsigned int destBit = destPos & 7;
-
-  unsigned int destIndexEnd = (destPos + srcSize + destOffset) / 8;
-  unsigned int endBit = destBit + srcSize;
-  if (count + destIndex > destSize) count = destSize - destIndex - destOffset;
-  if (destIndexEnd > destSize) destIndexEnd = destSize;  // limit end index to destination size
   // compute masks
+  unsigned int destBit = destPos & 7;
+  unsigned int endBit = destBit + srcSize;
   uint8_t mask = 0xFF << destBit;
   uint8_t data;
   // case for less then element bits write within a single element
@@ -39,30 +39,29 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
     *dest = data | ((*src << destBit) & mask);
     return;
   }
-  if (alignedWrites) {
+
+  if (alignedWrites) {  // faster path for aligned writes
     memcpy(dest, src, count);
     dest = dest + count;
   } else {
     // first element
     data = *dest & ~mask;
     *dest = data | (*src << destBit);
-    destIndex++;
     dest++;
     // continue
-    while (destIndex != destIndexEnd) {
+    while (count > 0) {
       data = *dest & mask;
       *dest = data | (*src >> (8 - destBit));
       src++;
       data = *dest & ~mask;
       *dest = data | (*src << destBit);
-      destIndex++;
       dest++;
       count--;
     }
   }
-  // last element
-  if ((destIndexEnd != destSize)) {  // check if the end operation would write over boundary
-    if (alignedWrites) {             // if we had aligned access, then we need next srcIndex
+  if (!abortLastWrite) {
+    // last element
+    if (alignedWrites) {  // if we had aligned access, then we need next srcIndex
       src++;
     }
     // handle remaining bits
