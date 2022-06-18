@@ -35,28 +35,29 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
   unsigned int remainderBits = endBit & 7;
   uint8_t mask = 0xFF << destBit;
   uint8_t data;
-  // case for less then element bits write within a single element
-  if (srcSize < 8 && endBit < 9) {
+
+  if (srcSize < 8 && endBit < 9) {  // case for less then element bits write within a single element
     mask = mask & ~(0xFF << (destBit + srcSize));
     data = *dest & ~mask;
     *dest = data | ((*src << destBit) & mask);
     return;
   }
 
-  if (alignedWrites) {  // faster path for aligned writes
+  if (alignedWrites) {  // case for aligned writes
     memcpy(dest, src, count);
     dest = dest + count;
     src = src + count;
+    // handle remainder of bits
     if (remainderBits && !abortLastWrite) {
       mask = 0xFF << (remainderBits);
       *dest = (*dest & mask) | (*src & ~mask);
     }
-  } else {  // unaligned writes
-    // first element
+
+  } else {  // case for unaligned writes single and multiple
+    // first element start
     *dest = (*dest & ~mask) | (*src << destBit);
     dest++;
-    // continue
-    while (count > 0) {
+    while (count > 0) {  // do the rest
       *dest = (*dest & mask) | (*src >> (8 - destBit));
       src++;
       *dest = (*dest & ~mask) | (*src << destBit);
@@ -64,8 +65,7 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
       count--;
     }
     if (!abortLastWrite) {
-      // handle remaining bits
-      if (remainderBits) {
+      if (remainderBits) {  // handle the rest
         mask = 0xFF << (remainderBits);
         *dest = (*dest & mask) | ((*src >> (8 - remainderBits)) & ~mask);
       }
