@@ -16,43 +16,37 @@
 namespace util {
 
 void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t mask, int shift, bitblitOperation op) {
-  uint8_t dataDest;
   uint8_t dataSrc;
   if (shift > 0)
     dataSrc = *src << shift;
   else if (shift < 0)
     dataSrc = *src >> -(shift);
+  else
+    dataSrc = *src;
   switch (op) {
     case bitblitOperation::OP_AND:
-      dataDest = *dest;
-      *dest = dataDest & (dataSrc | ~mask);
+      *dest = *dest & (dataSrc | ~mask);
       break;
     case bitblitOperation::OP_NONE:
-      dataDest = *dest & ~mask;
-      *dest = dataDest | (dataSrc & mask);
+      *dest = (*dest & ~mask) | (dataSrc & mask);
       break;
     case bitblitOperation::OP_NOT:
-      dataDest = *dest & ~mask;
-      *dest = dataDest | (~dataSrc & mask);
+      *dest = (*dest & ~mask) | (~dataSrc & mask);
       break;
     case bitblitOperation::OP_OR:
-      dataDest = *dest;
-      *dest = dataDest | (dataSrc & mask);
+      *dest = *dest | (dataSrc & mask);
       break;
     case bitblitOperation::OP_XOR:
-      dataDest = *dest;
-      *dest = dataDest ^ (dataSrc & mask);
+      *dest = *dest ^ (dataSrc & mask);
       break;
   }
 }
 
-// TODO: Split off read modify writes into separate function, you see that most of the operations have the same shape
-//
 void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize, bitblitOperation op) {
-  // compute indexes and limits
+  // compute count and extract special case
   bool alignedWrites = (destPos & 7) == 0;
   unsigned int count = srcSize / 8;
-  // clamp index and abort last write
+  // clamp index and set flag to disable last steps
   bool abortLastWrite = false;
   if ((srcSize + destPos) / 8 >= destSize) {
     count = destSize - (destPos / 8);
@@ -65,40 +59,42 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
   unsigned int endBit = destBit + srcSize;
   unsigned int remainderBits = endBit & 7;
   uint8_t mask = 0xFF << destBit;
-  uint8_t data;
 
   if (srcSize < 8 && endBit < 9) {  // case for less then element bits write within a single element
     mask = mask & ~(0xFF << (destBit + srcSize));
-    data = *dest & ~mask;
-    *dest = data | ((*src << destBit) & mask);
+    readModifyWrite(dest, src, mask, destBit, op);
     return;
   }
 
   if (alignedWrites) {  // case for aligned writes
-    memcpy(dest, src, count);
-    dest = dest + count;
-    src = src + count;
+    unsigned int i = count;
+    while (i > 0) {
+      readModifyWrite(dest, src, mask, 0, op);
+      dest++;
+      src++;
+      i--;
+    }
     // handle remainder of bits
     if (remainderBits && !abortLastWrite) {
-      mask = 0xFF << (remainderBits);
-      *dest = (*dest & mask) | (*src & ~mask);
+      mask = 0xFF >> (remainderBits);
+      readModifyWrite(dest, src, mask, 0, op);
     }
 
   } else {  // case for unaligned writes single and multiple
     // first element start
-    *dest = (*dest & ~mask) | (*src << destBit);
+    readModifyWrite(dest, src, mask, destBit, op);
     dest++;
     while (count > 0) {  // do the rest
-      *dest = (*dest & mask) | (*src >> (8 - destBit));
+      readModifyWrite(dest, src, ~mask, -(8 - destBit), op);
       src++;
-      *dest = (*dest & ~mask) | (*src << destBit);
+      readModifyWrite(dest, src, mask, destBit, op);
       dest++;
       count--;
     }
     if (!abortLastWrite) {
       if (remainderBits) {  // handle the rest
-        mask = 0xFF << (remainderBits);
-        *dest = (*dest & mask) | ((*src >> (8 - remainderBits)) & ~mask);
+        mask = 0xFF >> (remainderBits);
+        readModifyWrite(dest, src, mask, -(8 - destBit), op);
       }
     }
   }
