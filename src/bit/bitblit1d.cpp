@@ -43,15 +43,18 @@ void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t mask, int shift, bitbl
 }
 
 void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize, bitblitOperation op) {
-  // compute count and extract special case
-  bool alignedWrites = (destPos & 7) == 0;
-  unsigned int count = srcSize / 8;
-  // clamp index and set flag to disable last steps
-  bool abortLastWrite = false;
+  // compute count and clamp if needed
+  unsigned int count;
+  bool abortLastWrite;
   if ((srcSize + destPos) / 8 >= destSize) {
     count = destSize - (destPos / 8);
     abortLastWrite = true;
+  } else {
+    count = srcSize / 8;
+    abortLastWrite = false;
   }
+  // extract special case for aligned writes and adjust counts
+  bool alignedWrites = (destPos & 7) == 0;
   if (count > 0 && !alignedWrites) count--;
   dest = dest + destPos / 8;
   // compute masks and bit positions
@@ -74,8 +77,7 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
       src++;
       i--;
     }
-    // handle remainder of bits
-    if (remainderBits && !abortLastWrite) {
+    if (remainderBits && !abortLastWrite) {  // handle remainder of bits
       mask = 0xFF >> (remainderBits);
       readModifyWrite(dest, src, mask, 0, op);
     }
@@ -91,13 +93,10 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
       dest++;
       count--;
     }
-    if (!abortLastWrite) {
-      if (remainderBits) {  // handle the rest
-        mask = 0xFF >> (remainderBits);
-        readModifyWrite(dest, src, mask, -(8 - destBit), op);
-      }
+    if (!abortLastWrite && remainderBits) {  // handle last
+      mask = 0xFF >> (remainderBits);
+      readModifyWrite(dest, src, mask, -(8 - destBit), op);
     }
   }
 }
-
 };  // namespace util
