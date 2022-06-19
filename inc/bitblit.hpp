@@ -22,7 +22,7 @@ namespace util {
  * @brief
  *
  */
-enum class bitblitOperation { OP_NONE, OP_NOT, OP_AND, OP_OR, OP_XOR };
+enum class bitblitOperation { OP_MOV, OP_NOT, OP_AND, OP_OR, OP_XOR };
 
 /**
  * @brief One dimensional bit block transfer function
