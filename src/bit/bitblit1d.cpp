@@ -15,9 +15,11 @@
 
 namespace util {
 
+void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t *mask, int shift, bitblitOperation op) {}
+
 // TODO: Split off read modify writes into separate function, you see that most of the operations have the same shape
 //
-void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize) {
+void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize, bitblitOperation op) {
   // compute indexes and limits
   bool alignedWrites = (destPos & 7) == 0;
   unsigned int count = srcSize / 8;
