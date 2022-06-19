@@ -19,8 +19,8 @@
 namespace util {
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 enum class bitblitOperation { OP_NONE, OP_NOT, OP_AND, OP_OR, OP_XOR };
 
@@ -44,7 +44,7 @@ void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *sr
  * @param shift shift to apply to source, positive is shift left, negative is right
  * @param op    operation to execute
  */
-void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t *mask, int shift, bitblitOperation op);
+void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t mask, int shift, bitblitOperation op);
 
 };  // namespace util
 

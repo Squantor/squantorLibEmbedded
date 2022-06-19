@@ -15,7 +15,36 @@
 
 namespace util {
 
-void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t *mask, int shift, bitblitOperation op) {}
+void readModifyWrite(uint8_t *dest, uint8_t *src, uint8_t mask, int shift, bitblitOperation op) {
+  uint8_t dataDest;
+  uint8_t dataSrc;
+  if (shift > 0)
+    dataSrc = *src << shift;
+  else if (shift < 0)
+    dataSrc = *src >> -(shift);
+  switch (op) {
+    case bitblitOperation::OP_AND:
+      dataDest = *dest;
+      *dest = dataDest & (dataSrc | ~mask);
+      break;
+    case bitblitOperation::OP_NONE:
+      dataDest = *dest & ~mask;
+      *dest = dataDest | (dataSrc & mask);
+      break;
+    case bitblitOperation::OP_NOT:
+      dataDest = *dest & ~mask;
+      *dest = dataDest | (~dataSrc & mask);
+      break;
+    case bitblitOperation::OP_OR:
+      dataDest = *dest;
+      *dest = dataDest | (dataSrc & mask);
+      break;
+    case bitblitOperation::OP_XOR:
+      dataDest = *dest;
+      *dest = dataDest ^ (dataSrc & mask);
+      break;
+  }
+}
 
 // TODO: Split off read modify writes into separate function, you see that most of the operations have the same shape
 //
