@@ -19,7 +19,7 @@
 namespace util {
 
 /**
- * @brief
+ * @brief operations 
  *
  */
 enum class bitblitOperation { OP_MOV, OP_NOT, OP_AND, OP_OR, OP_XOR };
