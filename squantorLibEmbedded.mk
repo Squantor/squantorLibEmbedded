@@ -37,5 +37,6 @@ squantorLibEmbedded/src/bit/bitzoom.c \
 squantorLibEmbedded/src/pulse_density/pulse_density.c \
 squantorLibEmbedded/src/pulse_density/pulse_density.cpp \
 squantorLibEmbedded/src/bit/bitblit1d.cpp \
-squantorLibEmbedded/src/bit/readmodifywrite.cpp
+squantorLibEmbedded/src/bit/readmodifywrite.cpp \
+squantorLibEmbedded/src/bit/bitblit2d.cpp
 
