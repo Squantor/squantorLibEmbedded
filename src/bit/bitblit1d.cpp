@@ -15,30 +15,30 @@
 
 namespace util {
 
-void bitblit1d(__restrict uint8_t *dest, size_t destSize, unsigned int destPos, __restrict uint8_t *src, unsigned int srcSize,
+void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict uint8_t *src, unsigned int srcWidth,
                bitblitOperation op) {
   // compute count and clamp if needed
   unsigned int count;
   bool abortLastWrite;
-  if ((srcSize + destPos) / 8 >= destSize) {
-    count = destSize - (destPos / 8);
+  if ((srcWidth + destX) / 8 >= destWidth) {
+    count = destWidth - (destX / 8);
     abortLastWrite = true;
   } else {
-    count = srcSize / 8;
+    count = srcWidth / 8;
     abortLastWrite = false;
   }
   // extract special case for aligned writes and adjust counts
-  bool alignedWrites = (destPos & 7) == 0;
+  bool alignedWrites = (destX & 7) == 0;
   if (count > 0 && !alignedWrites) count--;
-  dest = dest + destPos / 8;
+  dest = dest + destX / 8;
   // compute masks and bit positions
-  unsigned int destBit = destPos & 7;
-  unsigned int endBit = destBit + srcSize;
+  unsigned int destBit = destX & 7;
+  unsigned int endBit = destBit + srcWidth;
   unsigned int remainderBits = endBit & 7;
   uint8_t mask = 0xFF << destBit;
 
-  if (srcSize < 8 && endBit < 9) {  // case for less then element bits write within a single element
-    mask = mask & ~(0xFF << (destBit + srcSize));
+  if (srcWidth < 8 && endBit < 9) {  // case for less then element bits write within a single element
+    mask = mask & ~(0xFF << (destBit + srcWidth));
     readModifyWrite(dest, src, mask, destBit, op);
     return;
   }

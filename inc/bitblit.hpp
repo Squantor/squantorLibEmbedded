@@ -28,12 +28,12 @@ enum class bitblitOperation { OP_MOV, OP_NOT, OP_AND, OP_OR, OP_XOR };
  * @brief One dimensional bit block transfer function
  *
  * @param dest      destination buffer
- * @param destSize  destination buffer in bytes
- * @param destPos   destination position in bits
+ * @param destWidth destination buffer in bytes
+ * @param destX     destination position in bits
  * @param src       source buffer
- * @param srcSize   sourcebuffer size in bits
+ * @param srcWidth  sourcebuffer size in bits
  */
-void bitblit1d(__restrict uint8_t *dest, size_t destSize, unsigned int destPos, __restrict uint8_t *src, unsigned int srcSize,
+void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict uint8_t *src, unsigned int srcWidth,
                bitblitOperation op);
 
 /**
