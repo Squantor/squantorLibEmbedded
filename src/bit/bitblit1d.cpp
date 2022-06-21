@@ -15,7 +15,8 @@
 
 namespace util {
 
-void bitblit1d(uint8_t *dest, size_t destSize, unsigned int destPos, uint8_t *src, unsigned int srcSize, bitblitOperation op) {
+void bitblit1d(__restrict uint8_t *dest, size_t destSize, unsigned int destPos, __restrict uint8_t *src, unsigned int srcSize,
+               bitblitOperation op) {
   // compute count and clamp if needed
   unsigned int count;
   bool abortLastWrite;
