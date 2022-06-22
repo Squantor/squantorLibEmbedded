@@ -14,7 +14,7 @@
 
 namespace util {
 
-void readModifyWrite(__restrict uint8_t *dest, __restrict uint8_t *src, uint8_t mask, int shift, bitblitOperation op) {
+void readModifyWrite(__restrict uint8_t *dest, __restrict uint8_t *src, uint8_t mask, int shift, bitblitOperation op) noexcept {
   uint8_t dataSrc;
   if (shift > 0)
     dataSrc = *src << shift;
@@ -41,7 +41,7 @@ void readModifyWrite(__restrict uint8_t *dest, __restrict uint8_t *src, uint8_t 
   }
 }
 
-void readModifyWrite(__restrict uint16_t *dest, __restrict uint8_t *src, uint16_t mask, int shift, bitblitOperation op) {
+void readModifyWrite(__restrict uint16_t *dest, __restrict uint8_t *src, uint16_t mask, int shift, bitblitOperation op) noexcept {
   uint16_t dataSrc;
   if (shift > 0)
     dataSrc = *src << shift;
@@ -68,7 +68,7 @@ void readModifyWrite(__restrict uint16_t *dest, __restrict uint8_t *src, uint16_
   }
 }
 
-void readModifyWrite(__restrict uint32_t *dest, __restrict uint8_t *src, uint32_t mask, int shift, bitblitOperation op) {
+void readModifyWrite(__restrict uint32_t *dest, __restrict uint8_t *src, uint32_t mask, int shift, bitblitOperation op) noexcept {
   uint32_t dataSrc;
   if (shift > 0)
     dataSrc = *src << shift;

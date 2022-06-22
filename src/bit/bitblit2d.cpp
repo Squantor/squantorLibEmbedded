@@ -16,7 +16,7 @@
 namespace util {
 
 void bitblit2d(__restrict uint8_t *dest, unsigned int destWidth, unsigned int destHeight, unsigned int destX, unsigned int destY,
-               __restrict uint8_t *src, unsigned int srcWidth, unsigned int srcHeight, bitblitOperation op) {
+               __restrict uint8_t *src, unsigned int srcWidth, unsigned int srcHeight, bitblitOperation op) noexcept {
   // TODO check if destX and destY are out of bounds
   // compute counts and clamp if needed
   const unsigned int elementBitCnt = 8;  // size of elements in src/dest
