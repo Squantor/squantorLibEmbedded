@@ -32,7 +32,7 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
   if (count > 0 && !alignedWrites) count--;
   dest = dest + destX / 8;
   // compute masks and bit positions
-  unsigned int destBit = destX & 7;
+  int destBit = destX & 7;
   unsigned int endBit = destBit + srcWidth;
   unsigned int remainderBits = endBit & 7;
   uint8_t mask = 0xFF << destBit;
