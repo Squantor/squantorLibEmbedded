@@ -79,7 +79,7 @@ void bitblit2d(__restrict uint8_t *dest, unsigned int destWidth, unsigned int de
       readModifyWrite(currentDestLine, currentSourceLine, mask, destBit, op);
       currentDestLine++;
       while (i > 0) {  // do the rest
-        readModifyWrite(currentDestLine, currentSourceLine, ~mask, -(elementBitCnt - destBit), op);
+        readModifyWrite(currentDestLine, currentSourceLine, static_cast<uint8_t>(~mask), -(elementBitCnt - destBit), op);
         currentSourceLine++;
         readModifyWrite(currentDestLine, currentSourceLine, mask, destBit, op);
         currentDestLine++;

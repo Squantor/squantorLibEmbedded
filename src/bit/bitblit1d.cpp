@@ -61,7 +61,7 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
     readModifyWrite(dest, src, mask, destBit, op);
     dest++;
     while (count > 0) {  // do the rest
-      readModifyWrite(dest, src, ~mask, -(8 - destBit), op);
+      readModifyWrite(dest, src, static_cast<uint8_t>(~mask), -(8 - destBit), op);
       src++;
       readModifyWrite(dest, src, mask, destBit, op);
       dest++;

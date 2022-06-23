@@ -20,7 +20,7 @@
 namespace util {
 
 template <typename destType, typename sourceType>
-void readModifyWrite(destType *__restrict__ dest, sourceType *__restrict__ src, uint32_t mask, int shift,
+void readModifyWrite(destType *__restrict__ dest, sourceType *__restrict__ src, destType mask, int shift,
                      bitblitOperation op) noexcept {
   static_assert(!std::numeric_limits<destType>::is_signed && !std::numeric_limits<sourceType>::is_signed);
   static_assert(std::numeric_limits<destType>::digits >= std::numeric_limits<sourceType>::digits);
