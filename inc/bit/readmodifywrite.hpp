@@ -26,7 +26,7 @@ namespace util {
  * @param dest        pointer to destination
  * @param src         pointer to source
  * @param mask        mask to apply to source
- * @param shift       shift factor to apply
+ * @param shift       shift factor to apply to source
  * @param op          operation to perform
  */
 template <typename destType, typename sourceType>
