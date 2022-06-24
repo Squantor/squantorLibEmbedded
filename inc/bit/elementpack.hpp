@@ -15,6 +15,7 @@
 
 #include <limits>
 #include <bit/operations.hpp>
+#include <bit/readmodifywrite.hpp>
 
 namespace util {
 /**
@@ -33,8 +34,21 @@ template <typename destType, typename sourceType>
 void elementPack(destType *__restrict__ dest, sourceType *__restrict__ src, int shift, bitblitOperation op) noexcept {
   // same size
   if constexpr (std::numeric_limits<destType>::digits == std::numeric_limits<sourceType>::digits) {
-    // aligned
-    // unaligned
+    destType mask = std::numeric_limits<destType>::max();
+    int maxShift = std::numeric_limits<destType>::digits;
+    if (shift == 0) {
+      readModifyWrite(dest, src, mask, shift, op);
+    } else {
+      if (shift > 0) {
+        mask = mask << shift;
+        readModifyWrite(dest, src, mask, shift, op);
+        src++;
+        readModifyWrite(dest, src, static_cast<destType>(~mask), -(maxShift - shift), op);
+      } else {
+        mask = mask >> -shift;
+        readModifyWrite(dest, src, mask, shift, op);
+      }
+    }
   }
   // dest larger then source
   else if constexpr (std::numeric_limits<destType>::digits > std::numeric_limits<sourceType>::digits) {
