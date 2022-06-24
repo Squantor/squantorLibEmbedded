@@ -18,7 +18,17 @@
 #include <bit/operations.hpp>
 
 namespace util {
-
+/**
+ * @brief Read, modifies and writes from source to destination with operation, the source is shifted and masked
+ *
+ * @tparam destType   destination element type
+ * @tparam sourceType source element type
+ * @param dest        pointer to destination
+ * @param src         pointer to source
+ * @param mask        mask to apply to source
+ * @param shift       shift factor to apply
+ * @param op          operation to perform
+ */
 template <typename destType, typename sourceType>
 void readModifyWrite(destType *__restrict__ dest, sourceType *__restrict__ src, destType mask, int shift,
                      bitblitOperation op) noexcept {
