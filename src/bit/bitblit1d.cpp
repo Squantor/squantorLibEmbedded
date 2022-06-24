@@ -18,26 +18,27 @@ namespace util {
 void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict const uint8_t *src, unsigned int srcWidth,
                bitblitOperation op) noexcept {
   // compute count and clamp if needed
+  const unsigned int elementBitCnt = 8;  // size of elements in src/dest
   unsigned int count;
   bool abortLastWrite;
-  if ((srcWidth + destX) / 8 >= destWidth) {
-    count = destWidth - (destX / 8);
+  if ((srcWidth + destX) / elementBitCnt >= destWidth) {
+    count = destWidth - (destX / elementBitCnt);
     abortLastWrite = true;
   } else {
-    count = srcWidth / 8;
+    count = srcWidth / elementBitCnt;
     abortLastWrite = false;
   }
   // extract special case for aligned writes and adjust counts
   bool alignedWrites = (destX & 7) == 0;
   if (count > 0 && !alignedWrites) count--;
-  dest = dest + destX / 8;
+  dest = dest + destX / elementBitCnt;
   // compute masks and bit positions
   int destBit = destX & 7;
   unsigned int endBit = destBit + srcWidth;
   unsigned int remainderBits = endBit & 7;
   uint8_t mask = 0xFF << destBit;
 
-  if (srcWidth < 8 && endBit < 9) {  // case for less then element bits write within a single element
+  if (srcWidth < elementBitCnt && endBit < 9) {  // case for less then element bits write within a single element
     mask = mask & ~(0xFF << (destBit + srcWidth));
     readModifyWrite(dest, src, mask, destBit, op);
     return;
@@ -61,7 +62,7 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
     readModifyWrite(dest, src, mask, destBit, op);
     dest++;
     while (count > 0) {  // do the rest
-      readModifyWrite(dest, src, static_cast<uint8_t>(~mask), -(8 - destBit), op);
+      readModifyWrite(dest, src, static_cast<uint8_t>(~mask), -(elementBitCnt - destBit), op);
       src++;
       readModifyWrite(dest, src, mask, destBit, op);
       dest++;
@@ -69,7 +70,7 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
     }
     if (!abortLastWrite && remainderBits) {  // handle last
       mask = 0xFF >> (remainderBits);
-      readModifyWrite(dest, src, mask, -(8 - destBit), op);
+      readModifyWrite(dest, src, mask, -(elementBitCnt - destBit), op);
     }
   }
 }
