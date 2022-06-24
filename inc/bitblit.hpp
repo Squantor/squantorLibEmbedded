@@ -17,20 +17,9 @@
 #include <stddef.h>
 #include <bit/operations.hpp>
 #include <bit/readmodifywrite.hpp>
+#include <bit/bitblit1d.hpp>
 
 namespace util {
-
-/**
- * @brief One dimensional bit block transfer function
- *
- * @param dest      destination buffer
- * @param destWidth destination buffer in bytes TODO: Change this to bits, makes more sense
- * @param destX     destination position in bits
- * @param src       source buffer
- * @param srcWidth  sourcebuffer size in bits
- */
-void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict const uint8_t *src, unsigned int srcWidth,
-               bitblitOperation op) noexcept;
 
 /**
  * @brief Two dimensional bit block transfer

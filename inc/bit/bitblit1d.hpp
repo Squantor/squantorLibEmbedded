@@ -5,22 +5,24 @@
  * For conditions of distribution and use, see LICENSE file
  */
 /**
- *\file bitblit.cpp
+ *\file bitblit1d.hpp
  *
- * Contains bit block transfer routines
+ * 1d bit transfer routine
  *
  */
-#include <bitblit.hpp>
-#include <string.h>
+#ifndef BITBLIT1D_HPP
+#define BITBLIT1D_HPP
+
+#include <limits>
+#include <bit/operations.hpp>
+#include <bit/readmodifywrite.hpp>
 
 namespace util {
-
-#if 0
-
-void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict const uint8_t *src, unsigned int srcWidth,
-               bitblitOperation op) noexcept {
+template <typename destType, typename srcType>
+void bitblit1d(destType *__restrict__ dest, unsigned int destWidth, unsigned int destX, const srcType *__restrict__ src,
+               unsigned int srcWidth, bitblitOperation op) noexcept {
   // compute count and clamp if needed
-  const unsigned int elementBitCnt = 8;  // size of elements in src/dest
+  const unsigned int elementBitCnt = std::numeric_limits<destType>::digits;
   unsigned int count;
   bool abortLastWrite;
   if ((srcWidth + destX) / elementBitCnt >= destWidth) {
@@ -38,7 +40,7 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
   int destBit = destX & 7;
   unsigned int endBit = destBit + srcWidth;
   unsigned int remainderBits = endBit & 7;
-  uint8_t mask = 0xFF << destBit;
+  destType mask = 0xFF << destBit;
 
   if (srcWidth < elementBitCnt && endBit < 9) {  // case for less then element bits write within a single element
     mask = mask & ~(0xFF << (destBit + srcWidth));
@@ -76,5 +78,6 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
     }
   }
 }
+}  // namespace util
+
 #endif
-};  // namespace util
