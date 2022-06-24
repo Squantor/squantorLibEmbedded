@@ -79,6 +79,15 @@ void elementPack(destType *__restrict__ dest, srcType *__restrict__ src, int src
           src++;
         }
       } else {
+        mask = mask >> -srcShift;
+        shiftpos = shiftpos - -srcShift;
+        while (elementCount > 0) {
+          readModifyWrite(dest, src, mask, shiftpos, op);
+          mask = mask >> std::numeric_limits<srcType>::digits;
+          shiftpos -= std::numeric_limits<srcType>::digits;
+          elementCount--;
+          src++;
+        }
       }
     }
   }
