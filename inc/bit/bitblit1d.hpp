@@ -25,8 +25,9 @@ void bitblit1d(destType *__restrict__ dest, unsigned int destWidth, unsigned int
   const unsigned int elementBitCnt = std::numeric_limits<destType>::digits;
   unsigned int count;
   bool abortLastWrite;
-  if ((srcWidth + destX) / elementBitCnt >= destWidth) {
-    count = destWidth - (destX / elementBitCnt);
+  if ((srcWidth + destX) >= destWidth) {
+    // this double divide makes sure we have a correct count
+    count = (destWidth / elementBitCnt) - (destX / elementBitCnt);
     abortLastWrite = true;
   } else {
     count = srcWidth / elementBitCnt;
