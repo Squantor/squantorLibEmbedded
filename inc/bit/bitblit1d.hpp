@@ -21,6 +21,7 @@ namespace util {
 template <typename destType, typename srcType>
 void bitblit1d(destType *__restrict__ dest, unsigned int destWidth, unsigned int destX, const srcType *__restrict__ src,
                unsigned int srcWidth, bitblitOperation op) noexcept {
+  if (destX >= destWidth) return;  // out of bounds, abort
   // compute count and clamp if needed
   const unsigned int elementBitCnt = std::numeric_limits<destType>::digits;
   unsigned int count;
