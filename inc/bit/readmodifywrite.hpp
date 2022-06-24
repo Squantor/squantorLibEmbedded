@@ -30,7 +30,7 @@ namespace util {
  * @param op          operation to perform
  */
 template <typename destType, typename srcType>
-void readModifyWrite(destType *__restrict__ dest, srcType *__restrict__ src, destType srcMask, int srcShift,
+void readModifyWrite(destType *__restrict__ dest, const srcType *__restrict__ src, destType srcMask, int srcShift,
                      bitblitOperation op) noexcept {
   static_assert(!std::numeric_limits<destType>::is_signed && !std::numeric_limits<srcType>::is_signed,
                 "readModifyWrite only accepts unsigned types!");

@@ -16,7 +16,7 @@
 namespace util {
 
 void bitblit2d(__restrict uint8_t *dest, unsigned int destWidth, unsigned int destHeight, unsigned int destX, unsigned int destY,
-               __restrict uint8_t *src, unsigned int srcWidth, unsigned int srcHeight, bitblitOperation op) noexcept {
+               __restrict const uint8_t *src, unsigned int srcWidth, unsigned int srcHeight, bitblitOperation op) noexcept {
   // TODO check if destX and destY are out of bounds
   // TODO it is a shame that we leave remaining bits of a source element unused
   // compute counts and clamp if needed
@@ -50,7 +50,7 @@ void bitblit2d(__restrict uint8_t *dest, unsigned int destWidth, unsigned int de
   const unsigned int remainderBits = endBit & 7;
   uint8_t mask;
   uint8_t *currentDestLine;
-  uint8_t *currentSourceLine;
+  const uint8_t *currentSourceLine;
 
   while (countY > 0) {
     mask = 0xFF << destBit;  // reset mask computation

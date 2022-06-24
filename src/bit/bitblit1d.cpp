@@ -15,7 +15,7 @@
 
 namespace util {
 
-void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict uint8_t *src, unsigned int srcWidth,
+void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict const uint8_t *src, unsigned int srcWidth,
                bitblitOperation op) noexcept {
   // compute count and clamp if needed
   unsigned int count;

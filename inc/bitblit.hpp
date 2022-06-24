@@ -29,7 +29,7 @@ namespace util {
  * @param src       source buffer
  * @param srcWidth  sourcebuffer size in bits
  */
-void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict uint8_t *src, unsigned int srcWidth,
+void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, __restrict const uint8_t *src, unsigned int srcWidth,
                bitblitOperation op) noexcept;
 
 /**
@@ -46,7 +46,7 @@ void bitblit1d(__restrict uint8_t *dest, size_t destWidth, unsigned int destX, _
  * @param op          operation to execute
  */
 void bitblit2d(__restrict uint8_t *dest, unsigned int destWidth, unsigned int destHeight, unsigned int destX, unsigned int destY,
-               __restrict uint8_t *src, unsigned int srcWidth, unsigned int srcHeight, bitblitOperation op) noexcept;
+               __restrict const uint8_t *src, unsigned int srcWidth, unsigned int srcHeight, bitblitOperation op) noexcept;
 
 };  // namespace util
 
