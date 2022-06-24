@@ -27,26 +27,29 @@ namespace util {
  * @tparam srcType  Source element type
  * @param dest      pointer to destination elements
  * @param src       pointer to source elements
- * @param shift     factor to shift the source, positive is shift left, negative is shift right
+ * @param srcShift  factor to shift the source, positive is shift left, negative is shift right, maximum shift factor is maximum
+ * bits of source
  * @param op        operation to execute
  */
 template <typename destType, typename srcType>
-void elementPack(destType *__restrict__ dest, srcType *__restrict__ src, int shift, bitblitOperation op) noexcept {
+void elementPack(destType *__restrict__ dest, srcType *__restrict__ src, int srcShift, bitblitOperation op) noexcept {
+  int maxDestShift = std::numeric_limits<destType>::digits;
+  int maxSrcShift = std::numeric_limits<srcType>::digits;
   // same size
   if constexpr (std::numeric_limits<destType>::digits == std::numeric_limits<srcType>::digits) {
     destType mask = std::numeric_limits<destType>::max();
-    int maxShift = std::numeric_limits<destType>::digits;
-    if (shift == 0) {
-      readModifyWrite(dest, src, mask, shift, op);
+
+    if (srcShift == 0) {
+      readModifyWrite(dest, src, mask, srcShift, op);
     } else {
-      if (shift > 0) {
-        mask = mask << shift;
-        readModifyWrite(dest, src, mask, shift, op);
+      if (srcShift > 0) {
+        mask = mask << srcShift;
+        readModifyWrite(dest, src, mask, srcShift, op);
         src++;
-        readModifyWrite(dest, src, static_cast<destType>(~mask), -(maxShift - shift), op);
+        readModifyWrite(dest, src, static_cast<destType>(~mask), -(maxDestShift - srcShift), op);
       } else {
-        mask = mask >> -shift;
-        readModifyWrite(dest, src, mask, shift, op);
+        mask = mask >> -srcShift;
+        readModifyWrite(dest, src, mask, srcShift, op);
       }
     }
   }
@@ -55,8 +58,7 @@ void elementPack(destType *__restrict__ dest, srcType *__restrict__ src, int shi
     int elementCount = std::numeric_limits<destType>::digits / std::numeric_limits<srcType>::digits;
     int shiftpos = std::numeric_limits<destType>::digits - std::numeric_limits<srcType>::digits;
     destType mask = std::numeric_limits<srcType>::max() << shiftpos;
-
-    if (shift == 0) {
+    if (srcShift == 0) {
       while (elementCount > 0) {
         readModifyWrite(dest, src, mask, shiftpos, op);
         mask = mask >> std::numeric_limits<srcType>::digits;
@@ -65,7 +67,18 @@ void elementPack(destType *__restrict__ dest, srcType *__restrict__ src, int shi
         src++;
       }
     } else {
-      if (shift > 0) {
+      if (srcShift > 0) {
+        readModifyWrite(dest, src, static_cast<destType>(mask << srcShift), shiftpos + srcShift, op);
+        mask = mask >> (maxSrcShift - srcShift);
+        shiftpos = shiftpos - (maxSrcShift - srcShift);
+        while (elementCount > 0) {
+          readModifyWrite(dest, src, mask, shiftpos, op);
+          mask = mask >> std::numeric_limits<srcType>::digits;
+          shiftpos -= std::numeric_limits<srcType>::digits;
+          elementCount--;
+          src++;
+        }
+      } else {
       }
     }
   }
