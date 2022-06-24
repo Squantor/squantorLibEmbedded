@@ -22,8 +22,10 @@ namespace util {
 template <typename destType, typename sourceType>
 void readModifyWrite(destType *__restrict__ dest, sourceType *__restrict__ src, destType mask, int shift,
                      bitblitOperation op) noexcept {
-  static_assert(!std::numeric_limits<destType>::is_signed && !std::numeric_limits<sourceType>::is_signed);
-  static_assert(std::numeric_limits<destType>::digits >= std::numeric_limits<sourceType>::digits);
+  static_assert(!std::numeric_limits<destType>::is_signed && !std::numeric_limits<sourceType>::is_signed,
+                "readModifyWrite only accepts unsigned types!");
+  static_assert(std::numeric_limits<destType>::digits >= std::numeric_limits<sourceType>::digits,
+                "source should have equal or less bits then destination!");
   destType dataSrc;
   if (shift > 0)
     dataSrc = *src << shift;
