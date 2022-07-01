@@ -34,8 +34,10 @@ namespace util {
 template <typename destType, typename srcType>
 void elementPack(destType *__restrict__ dest, const srcType *__restrict__ src, int srcShift, bitblitOperation op) noexcept {
   // same size
-  if constexpr (std::numeric_limits<destType>::digits == std::numeric_limits<srcType>::digits) {
-    const int maxDestShift = std::numeric_limits<destType>::digits;
+  constexpr int destDigits = std::numeric_limits<destType>::digits;
+  constexpr int srcDigits = std::numeric_limits<srcType>::digits;
+  if constexpr (destDigits == srcDigits) {
+    const int maxDestShift = destDigits;
     destType destMask = std::numeric_limits<destType>::max();
 
     if (srcShift == 0) {
@@ -53,16 +55,16 @@ void elementPack(destType *__restrict__ dest, const srcType *__restrict__ src, i
     }
   }
   // dest larger then source
-  else if constexpr (std::numeric_limits<destType>::digits > std::numeric_limits<srcType>::digits) {
-    const int maxSrcShift = std::numeric_limits<srcType>::digits;
-    int elementCount = std::numeric_limits<destType>::digits / std::numeric_limits<srcType>::digits;
-    int shiftpos = std::numeric_limits<destType>::digits - std::numeric_limits<srcType>::digits;
+  else if constexpr (destDigits > srcDigits) {
+    const int maxSrcShift = srcDigits;
+    int elementCount = destDigits / srcDigits;
+    int shiftpos = destDigits - srcDigits;
     destType destMask = std::numeric_limits<srcType>::max() << shiftpos;
     if (srcShift == 0) {
       while (elementCount > 0) {
         readModifyWrite(dest, src, destMask, shiftpos, op);
-        destMask = destMask >> std::numeric_limits<srcType>::digits;
-        shiftpos -= std::numeric_limits<srcType>::digits;
+        destMask = destMask >> srcDigits;
+        shiftpos -= srcDigits;
         elementCount--;
         src++;
       }
@@ -74,8 +76,8 @@ void elementPack(destType *__restrict__ dest, const srcType *__restrict__ src, i
         src++;
         while (elementCount > 0) {
           readModifyWrite(dest, src, destMask, shiftpos, op);
-          destMask = destMask >> std::numeric_limits<srcType>::digits;
-          shiftpos -= std::numeric_limits<srcType>::digits;
+          destMask = destMask >> srcDigits;
+          shiftpos -= srcDigits;
           elementCount--;
           src++;
         }
@@ -84,8 +86,8 @@ void elementPack(destType *__restrict__ dest, const srcType *__restrict__ src, i
         shiftpos = shiftpos - -srcShift;
         while (elementCount > 0) {
           readModifyWrite(dest, src, destMask, shiftpos, op);
-          destMask = destMask >> std::numeric_limits<srcType>::digits;
-          shiftpos -= std::numeric_limits<srcType>::digits;
+          destMask = destMask >> srcDigits;
+          shiftpos -= srcDigits;
           elementCount--;
           src++;
         }
@@ -94,8 +96,7 @@ void elementPack(destType *__restrict__ dest, const srcType *__restrict__ src, i
   }
   // cant handle this, yet
   else
-    static_assert(std::numeric_limits<destType>::digits >= std::numeric_limits<srcType>::digits,
-                  "elementPack can only pack if source is smaller or equally sized then destination");
+    static_assert(destDigits >= srcDigits, "elementPack can only pack if source is smaller or equally sized then destination");
 }
 }  // namespace util
 
