@@ -22,6 +22,8 @@ namespace util {
 /**
  * @brief
  *
+ * @tparam destType
+ * @tparam srcType
  * @param dest
  * @param destWidth
  * @param destHeight
@@ -32,10 +34,10 @@ namespace util {
  * @param srcHeight
  * @param op
  */
-void bitblit2dfast(__restrict uint8_t *dest, unsigned int destWidth, unsigned int destHeight, unsigned int destX,
-                   unsigned int destY, __restrict const uint8_t *src, unsigned int srcWidth, unsigned int srcHeight,
-                   bitblitOperation op) noexcept;
-{}
+template <typename destType, typename srcType>
+void bitblit2dfast(destType *__restrict__ dest, unsigned int destWidth, unsigned int destHeight, unsigned int destX,
+                   unsigned int destY, const srcType *__restrict__ src, unsigned int srcWidth, unsigned int srcHeight,
+                   bitblitOperation op) noexcept {}
 
 };  // namespace util
 
