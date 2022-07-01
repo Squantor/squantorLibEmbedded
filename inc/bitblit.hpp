@@ -18,6 +18,8 @@
 #include <bit/operations.hpp>
 #include <bit/readmodifywrite.hpp>
 #include <bit/bitblit1d.hpp>
+#include <bit/bitblit2dfast.hpp>
+#include <bit/bitblit2dsmall.hpp>
 
 namespace util {
 
