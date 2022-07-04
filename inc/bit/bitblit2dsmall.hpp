@@ -40,7 +40,51 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
                     bitblitOperation op) noexcept {
   constexpr int destDigits = std::numeric_limits<destType>::digits;
   constexpr int srcDigits = std::numeric_limits<srcType>::digits;
-  
+  // compute iteration limits for width and height
+  unsigned int widthCount;
+  if ((destX + srcWidth) >= destWidth)
+    widthCount = destWidth - destX;
+  else
+    widthCount = srcWidth;
+  unsigned int heightCount;
+  if ((destY + srcHeight) >= destHeight)
+    heightCount = destHeight - destY;
+  else
+    heightCount = srcHeight;
+
+  destType destMask;
+  srcType srcMask;
+  destType *currDestLine;
+  const srcType *currSrcLine;
+
+  unsigned int x, y;
+  y = heightCount;
+  while (y > 0) {
+    x = widthCount;
+    // do X iteration
+    destMask = 1 << (destX & (destDigits - 1));
+    srcMask = 1;
+    currDestLine = dest;
+    currSrcLine = src;
+    while (x > 0) {
+      bool srcPixel = (*currSrcLine & srcMask) ? true : false;
+      // transfer a bit according to operation
+      x--;
+      srcMask = srcMask << 1;
+      if (srcMask == 0) {
+        srcMask = 1;
+        currSrcLine++;
+      }
+      destMask = destMask << 1;
+      if (destMask == 0) {
+        destMask = 1;
+        currDestLine++;
+      }
+    }
+    y--;
+    dest = dest + (destWidth / destDigits);
+    src = src + (srcWidth / srcDigits);
+  }
 }
 
 };  // namespace util
