@@ -40,6 +40,8 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
                     bitblitOperation op) noexcept {
   constexpr int destDigits = std::numeric_limits<destType>::digits;
   constexpr int srcDigits = std::numeric_limits<srcType>::digits;
+  if (destX > destWidth) return;
+  if (destY > destHeight) return;
   // compute iteration limits for width and height
   unsigned int widthCount;
   if ((destX + srcWidth) >= destWidth)
@@ -52,23 +54,26 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
   else
     heightCount = srcHeight;
 
+  // add height offset to destination
+  dest = dest + (destY * (destWidth / destDigits));
+
   destType destMask;
   srcType srcMask;
   destType *currDestLine;
   const srcType *currSrcLine;
 
-  unsigned int x, y;
-  y = heightCount;
-  while (y > 0) {
+  unsigned int widthCounter, heightCounter;
+  heightCounter = heightCount;
+  while (heightCounter > 0) {
     // TODO, we have two types of source bitmaps, one where a new line does not use the remaining bits
     // and a bitmap where we use ALL the bits on the end of the line, this is more compact for fonts and such
-    x = widthCount;
+    widthCounter = widthCount;
     // do X iteration
     destMask = 1 << (destX & (destDigits - 1));
     srcMask = 1;
-    currDestLine = dest;
+    currDestLine = dest + (destX / destDigits);
     currSrcLine = src;
-    while (x > 0) {
+    while (widthCounter > 0) {
       bool srcPixel = (*currSrcLine & srcMask) ? true : false;
       bool destPixel = (*currDestLine & destMask) ? true : false;
       // transfer a bit according to operation
@@ -96,7 +101,7 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
       else
         *currDestLine = *currDestLine & ~destMask;
       // compute all indices
-      x--;
+      widthCounter--;
       srcMask = srcMask << 1;
       if (srcMask == 0) {
         srcMask = 1;
@@ -108,7 +113,7 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
         currDestLine++;
       }
     }
-    y--;
+    heightCounter--;
     dest = dest + (destWidth / destDigits);
     src = src + (srcWidth / srcDigits);
   }
