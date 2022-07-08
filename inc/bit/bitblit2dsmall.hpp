@@ -60,6 +60,8 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
   unsigned int x, y;
   y = heightCount;
   while (y > 0) {
+    // TODO, we have two types of source bitmaps, one where a new line does not use the remaining bits
+    // and a bitmap where we use ALL the bits on the end of the line, this is more compact for fonts and such
     x = widthCount;
     // do X iteration
     destMask = 1 << (destX & (destDigits - 1));
@@ -68,7 +70,32 @@ void bitblit2dsmall(destType *__restrict__ dest, unsigned int destWidth, unsigne
     currSrcLine = src;
     while (x > 0) {
       bool srcPixel = (*currSrcLine & srcMask) ? true : false;
+      bool destPixel = (*currDestLine & destMask) ? true : false;
       // transfer a bit according to operation
+      switch (op) {
+        case bitblitOperation::OP_AND:
+          destPixel = destPixel && srcPixel;
+          break;
+        case bitblitOperation::OP_MOV:
+          destPixel = srcPixel;
+          break;
+        case bitblitOperation::OP_NOT:
+          destPixel = !srcPixel;
+          break;
+        case bitblitOperation::OP_OR:
+          destPixel = destPixel || srcPixel;
+          break;
+        case bitblitOperation::OP_XOR:
+          destPixel = destPixel != srcPixel;
+          break;
+        default:
+          break;
+      }
+      if (destPixel)
+        *currDestLine = *currDestLine | destMask;
+      else
+        *currDestLine = *currDestLine & ~destMask;
+      // compute all indices
       x--;
       srcMask = srcMask << 1;
       if (srcMask == 0) {
