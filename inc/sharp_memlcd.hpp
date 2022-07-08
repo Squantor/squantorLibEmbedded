@@ -17,14 +17,14 @@
 #include <cstddef>
 #include <string.h>
 #include <array.hpp>
+#include <bitblit.hpp>
 
 namespace util {
 template <int xSize, int ySize, int shift>
 struct lcdConfig {
-  static constexpr inline auto maxX = xSize; /*!< X size of the LCD */
-  static constexpr inline auto maxY = ySize; /*!< Y size of the LCD */
-  static constexpr inline auto addrShift =
-      shift; /*!< amount of shift for putting address in right spot */
+  static constexpr inline auto maxX = xSize;      /*!< X size of the LCD */
+  static constexpr inline auto maxY = ySize;      /*!< Y size of the LCD */
+  static constexpr inline auto addrShift = shift; /*!< amount of shift for putting address in right spot */
 };
 
 // few example LCD configurations
@@ -50,7 +50,9 @@ struct sharpMemLcd {
     return line * ((config::maxX / 16) + 1);
   }
 
-  int computeColumnAddres(uint16_t column) { return (column / 16) + 1; }
+  int computeColumnAddres(uint16_t column) {
+    return (column / 16) + 1;
+  }
 
   void putPixel(uint16_t x, uint16_t y, uint8_t pixel) {
     int index = computeColumnAddres(x) + computeLineAddres(y);
@@ -60,8 +62,7 @@ struct sharpMemLcd {
       frameBuffer[index] = frameBuffer[index] | (0x01 << (x & 0xF));
   }
 
-  uint8_t getPixel(const uint8_t *block, uint16_t blockWidth, uint16_t x,
-                   uint16_t y) {
+  uint8_t getPixel(const uint8_t *block, uint16_t blockWidth, uint16_t x, uint16_t y) {
     uint8_t mask = 1 << (x & 0x07);
     int index = (x / 8) + (y * (blockWidth / 8));
     return (block[index] & mask);
@@ -75,8 +76,7 @@ struct sharpMemLcd {
     // update all vcoms in all bits
     // TODO, change this when doing LCD update with dirty lines
     for (uint16_t i = 0; i < config::maxY; i++) {
-      frameBuffer[computeLineAddres(i)] =
-          frameBuffer[computeLineAddres(i)] ^ 0x0002;
+      frameBuffer[computeLineAddres(i)] = frameBuffer[computeLineAddres(i)] ^ 0x0002;
     }
     // the first word of the framebuffer contains always a vcom signal
     xferFunction(frameBuffer.begin(), frameBuffer.begin() + 1);
@@ -94,24 +94,11 @@ struct sharpMemLcd {
   }
 
   // xPos, yPos, blockWidth, blockHeight are in bits!
-  void bitBlockTransfer(uint16_t xPos, uint16_t yPos, const uint8_t *block,
-                        uint16_t blockWidth, uint16_t blockHeight,
-                        bool invert = false) {
-    uint16_t destX;
-    uint16_t destY = yPos;
-    for (uint16_t sourceY = 0; sourceY < blockHeight; sourceY++) {
-      destX = xPos;
-      for (uint16_t sourceX = 0; sourceX < blockWidth; sourceX++) {
-        uint8_t pixel = getPixel(block, blockWidth, sourceX, sourceY);
-        if (invert) pixel = !pixel;
-        putPixel(destX, destY, pixel);
-        destX++;
-        // bounds check
-        if (destX == maxX) break;
-      }
-      destY++;
-      if (destY == maxY) break;
-    }
+  void bitBlockTransfer(unsigned int xPos, unsigned int yPos, const uint8_t *block, unsigned int blockWidth,
+                        unsigned int blockHeight, bitblitOperation op) {
+    // the framebuffer contains some out of band data, fix this
+    bitblit2dsmall(frameBuffer.__data, maxX+16, maxY, xPos+16, yPos, block, blockWidth, blockHeight, op);
+    // TODO: make lines dirty that have been touched
   }
 
   // Adding two 16 bit words per row for spi data setup and teardown
