@@ -69,6 +69,7 @@ struct sharpMemLcd {
   }
 
   void lcdUpdate(auto xferFunction) {
+    // TODO write only dirty lines to LCD
     xferFunction(frameBuffer.begin(), frameBuffer.end());
   }
 
@@ -83,10 +84,9 @@ struct sharpMemLcd {
   }
 
   void setBuffer(uint16_t value) {
-    for (uint16_t &frameData : frameBuffer) {
+    for (auto &&frameData : frameBuffer) {
       frameData = value;
     }
-
     for (uint16_t i = 0; i < config::maxY; i++) {
       // add M0, M1, M2 bits and line addres to beginning of each line entry
       frameBuffer[computeLineAddres(i)] = 0x01 | (i + 1) << config::addrShift;
@@ -97,11 +97,11 @@ struct sharpMemLcd {
   void bitBlockTransfer(unsigned int xPos, unsigned int yPos, const uint8_t *block, unsigned int blockWidth,
                         unsigned int blockHeight, bitblitOperation op) {
     // the framebuffer contains some out of band data, fix this
-    bitblit2dsmall(frameBuffer.__data, maxX+16, maxY, xPos+16, yPos, block, blockWidth, blockHeight, op);
+    bitblit2dsmall(frameBuffer.data(), maxX + 16, maxY, xPos + 16, yPos, block, blockWidth, blockHeight, op);
     // TODO: make lines dirty that have been touched
   }
 
-  // Adding two 16 bit words per row for spi data setup and teardown
+  // Adding 16 bit word per row for spi data setup and teardown
   array<uint16_t, ((config::maxX / 16) + 1) * config::maxY> frameBuffer;
   static const uint16_t maxX = config::maxX;
   static const uint16_t maxY = config::maxY;
