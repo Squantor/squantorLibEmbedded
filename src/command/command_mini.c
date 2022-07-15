@@ -27,39 +27,33 @@ SOFTWARE.
 #include <stdlib.h>
 #include <ctype.h>
 
-int commandCompare(const char *__restrict__ pattern, const char *__restrict__ cmdline)
-{
-    while((*pattern) && (*pattern == *cmdline))
-    {
-        ++pattern;
-        ++cmdline;
-    }
-    // did we reach end of pattern?
-    if((*pattern == '\0'))
-        // yes, pattern ended with terminator and cmdline had more chars
-        return 0;
-    else
-        return(*(unsigned char *)pattern - *(unsigned char *)cmdline);
+int commandCompare(const char *__restrict__ pattern, const char *__restrict__ cmdline) {
+  while ((*pattern) && (*pattern == *cmdline)) {
+    ++pattern;
+    ++cmdline;
+  }
+  // did we reach end of pattern?
+  if ((*pattern == '\0'))
+    // yes, pattern ended with terminator and cmdline had more chars
+    return 0;
+  else
+    return (*(unsigned char *)pattern - *(unsigned char *)cmdline);
 }
 
-result commandInterpret(commandEntry_t *__restrict__ list, const char *__restrict__ command)
-{
-    while(list->handler != NULL)
-    {
-        if(commandCompare(list->command, command) == 0)
-        {
-            const char *s = command;
-            // skip the matched command part
-            s = s + strlen(list->command);
-            // skip any whitespace
-            while(isspace(*s))
-                s++;
-            if(*s == '\0')
-                return list->handler(NULL);
-            else
-                return list->handler(s);
-        }
-        list++;
+result commandInterpret(commandEntry_t *__restrict__ list, const char *__restrict__ command) {
+  while (list->handler != NULL) {
+    if (commandCompare(list->command, command) == 0) {
+      const char *s = command;
+      // skip the matched command part
+      s = s + strlen(list->command);
+      // skip any whitespace
+      while (isspace(*s)) s++;
+      if (*s == '\0')
+        return list->handler(NULL);
+      else
+        return list->handler(s);
     }
-    return commandNotFound;
+    list++;
+  }
+  return commandNotFound;
 }

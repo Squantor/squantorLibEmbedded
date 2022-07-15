@@ -24,7 +24,6 @@ SOFTWARE.
 
 #include <datastream.h>
 
-result dsReadChar(const datastreamChar_t *restrict stream, char *restrict c)
-{
-    return stream->read(c);
+result dsReadChar(const datastreamChar_t *restrict stream, char *restrict c) {
+  return stream->read(c);
 }

@@ -25,19 +25,16 @@ SOFTWARE.
 #include <datastream.h>
 #include <results.h>
 
-result printBinU32(const datastreamChar_t *__restrict__ stream, const uint32_t data)
-{
-    uint32_t mask = 0x80000000;
-    while(mask != 0)
-    {
-        result printResult;
-        if(mask & data)
-            printResult = printDigit(stream, 1);
-        else
-            printResult = printDigit(stream, 0);
-        if(printResult != noError)
-            return printResult;
-        mask = mask >> 1;
-    }
-    return noError;
+result printBinU32(const datastreamChar_t *__restrict__ stream, const uint32_t data) {
+  uint32_t mask = 0x80000000;
+  while (mask != 0) {
+    result printResult;
+    if (mask & data)
+      printResult = printDigit(stream, 1);
+    else
+      printResult = printDigit(stream, 0);
+    if (printResult != noError) return printResult;
+    mask = mask >> 1;
+  }
+  return noError;
 }

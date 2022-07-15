@@ -26,26 +26,21 @@ SOFTWARE.
 #include <datastream.h>
 #include <results.h>
 
-result printDecNzU16(const datastreamChar_t *__restrict__ stream, uint16_t data)
-{
-    uint16_t num = 10000;
-    uint8_t idx;
-    bool hitDigits = false;
-    if(data == 0)
-        return printDigit(stream, 0);
-    while(num > 0)
-    {
-        idx = data / num;
-        if((idx != 0) || (hitDigits == true))
-        {
-            // we have a non zero digit, now print everything
-            hitDigits = true;
-            result printResult = printDigit(stream, idx);
-            if(printResult != noError)
-                return printResult;
-        }
-        data -= idx * num;
-        num = num / 10;
+result printDecNzU16(const datastreamChar_t *__restrict__ stream, uint16_t data) {
+  uint16_t num = 10000;
+  uint8_t idx;
+  bool hitDigits = false;
+  if (data == 0) return printDigit(stream, 0);
+  while (num > 0) {
+    idx = data / num;
+    if ((idx != 0) || (hitDigits == true)) {
+      // we have a non zero digit, now print everything
+      hitDigits = true;
+      result printResult = printDigit(stream, idx);
+      if (printResult != noError) return printResult;
     }
-    return noError;
+    data -= idx * num;
+    num = num / 10;
+  }
+  return noError;
 }

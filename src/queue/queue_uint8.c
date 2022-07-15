@@ -24,37 +24,31 @@ SOFTWARE.
 
 #include <queue.h>
 
-void queueUint8Init(queueUint8_t *restrict queue)
-{
-    queue->head = 0;
-    queue->tail = 0;
+void queueUint8Init(queueUint8_t *restrict queue) {
+  queue->head = 0;
+  queue->tail = 0;
 }
 
-result queueUint8State(const queueUint8_t *restrict queue)
-{
-    if(queue->head == queue->tail)
-        return queueEmpty;
-    else if(((queue->head+1) % queue->max) == queue->tail)
-        return queueFull;
-    else
-        return queueNotEmpty;    
+result queueUint8State(const queueUint8_t *restrict queue) {
+  if (queue->head == queue->tail)
+    return queueEmpty;
+  else if (((queue->head + 1) % queue->max) == queue->tail)
+    return queueFull;
+  else
+    return queueNotEmpty;
 }
 
-result queueUint8Enqueue(queueUint8_t *restrict queue, const uint8_t p)
-{
-    int newHead = (queue->head+1) % queue->max;
-    if(newHead == queue->tail)
-        return queueFull;
-    queue->buf[queue->head] = p;
-    queue->head = newHead;
-    return noError;
+result queueUint8Enqueue(queueUint8_t *restrict queue, const uint8_t p) {
+  int newHead = (queue->head + 1) % queue->max;
+  if (newHead == queue->tail) return queueFull;
+  queue->buf[queue->head] = p;
+  queue->head = newHead;
+  return noError;
 }
 
-result queueUint8Dequeue(queueUint8_t *restrict queue, uint8_t *restrict p)
-{
-    if(queue->head == queue->tail)
-        return queueEmpty;
-    *p = queue->buf[queue->tail];
-    queue->tail = (queue->tail+1) % queue->max;
-    return noError;
+result queueUint8Dequeue(queueUint8_t *restrict queue, uint8_t *restrict p) {
+  if (queue->head == queue->tail) return queueEmpty;
+  *p = queue->buf[queue->tail];
+  queue->tail = (queue->tail + 1) % queue->max;
+  return noError;
 }

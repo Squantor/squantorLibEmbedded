@@ -24,37 +24,31 @@ SOFTWARE.
 
 #include <queue.h>
 
-void queueCharInit(queueChar_t *restrict queue)
-{
-    queue->head = 0;
-    queue->tail = 0;
+void queueCharInit(queueChar_t *restrict queue) {
+  queue->head = 0;
+  queue->tail = 0;
 }
 
-result queueCharState(const queueChar_t *restrict queue)
-{
-    if(queue->head == queue->tail)
-        return queueEmpty;
-    else if(((queue->head+1) % queue->max) == queue->tail)
-        return queueFull;
-    else
-        return queueNotEmpty;    
+result queueCharState(const queueChar_t *restrict queue) {
+  if (queue->head == queue->tail)
+    return queueEmpty;
+  else if (((queue->head + 1) % queue->max) == queue->tail)
+    return queueFull;
+  else
+    return queueNotEmpty;
 }
 
-result queueCharEnqueue(queueChar_t *restrict queue, char p)
-{
-    int newHead = (queue->head+1) % queue->max;
-    if(newHead == queue->tail)
-        return queueFull;
-    queue->buf[queue->head] = p;
-    queue->head = newHead;
-    return noError;
+result queueCharEnqueue(queueChar_t *restrict queue, char p) {
+  int newHead = (queue->head + 1) % queue->max;
+  if (newHead == queue->tail) return queueFull;
+  queue->buf[queue->head] = p;
+  queue->head = newHead;
+  return noError;
 }
 
-result queueCharDequeue(queueChar_t *queue, char *restrict p)
-{
-    if(queue->head == queue->tail)
-        return queueEmpty;
-    *p = queue->buf[queue->tail];
-    queue->tail = (queue->tail+1) % queue->max;
-    return noError;
+result queueCharDequeue(queueChar_t *queue, char *restrict p) {
+  if (queue->head == queue->tail) return queueEmpty;
+  *p = queue->buf[queue->tail];
+  queue->tail = (queue->tail + 1) % queue->max;
+  return noError;
 }

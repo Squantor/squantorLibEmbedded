@@ -4,10 +4,10 @@
  * Copyright (c) 2021 Bart Bilos
  * For conditions of distribution and use, see LICENSE file
  */
-/** 
+/**
  * \file parsedigit.h
- * 
- */ 
+ *
+ */
 #ifndef PARSEDIGIT_H
 #define PARSEDIGIT_H
 

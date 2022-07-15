@@ -26,54 +26,43 @@ SOFTWARE.
 
 static ansiSequence ansiParserState = ansiError;
 
-ansiSequence ansiParse(char c)
-{
-    if((c == '\e') && (ansiParserState > ansiKnown))
-    {
-        // start of ansi sequence
-        ansiParserState = ansiEntered;
-        return ansiParserState;        
-    } 
-    else if(ansiParserState == ansiEntered)
-    {
-        // we are at the start of the sequence
-        switch(c)
-        {
-            // detected left bracket
-            case '[':
-                ansiParserState = ansiBrackOpen;
-            break;
-            default:
-                ansiParserState = ansiError;
-            break;
-        }
-    }
-    else if(ansiParserState == ansiBrackOpen)
-    {
-        switch(c)
-        {
-            case 'A':
-                ansiParserState = ansiCursorUp;
-            break;
-            case 'B':
-                ansiParserState = ansiCursorDown;
-            break;
-            case 'C':
-                ansiParserState = ansiCursorForward;
-            break;
-            case 'D':
-                ansiParserState = ansiCursorBackward;
-            break;
-            default:
-                ansiParserState = ansiError;
-            break;
-
-        }
-    }
-    else
-    {
-        ansiParserState = ansiError;
-    }
-        
+ansiSequence ansiParse(char c) {
+  if ((c == '\e') && (ansiParserState > ansiKnown)) {
+    // start of ansi sequence
+    ansiParserState = ansiEntered;
     return ansiParserState;
-} 
+  } else if (ansiParserState == ansiEntered) {
+    // we are at the start of the sequence
+    switch (c) {
+      // detected left bracket
+      case '[':
+        ansiParserState = ansiBrackOpen;
+        break;
+      default:
+        ansiParserState = ansiError;
+        break;
+    }
+  } else if (ansiParserState == ansiBrackOpen) {
+    switch (c) {
+      case 'A':
+        ansiParserState = ansiCursorUp;
+        break;
+      case 'B':
+        ansiParserState = ansiCursorDown;
+        break;
+      case 'C':
+        ansiParserState = ansiCursorForward;
+        break;
+      case 'D':
+        ansiParserState = ansiCursorBackward;
+        break;
+      default:
+        ansiParserState = ansiError;
+        break;
+    }
+  } else {
+    ansiParserState = ansiError;
+  }
+
+  return ansiParserState;
+}
