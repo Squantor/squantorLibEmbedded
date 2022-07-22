@@ -431,6 +431,6 @@ const uint8_t font8x8RowFlipped[760] = {
   0x02, 0x03, 0x01, 0x03, 0x02, 0x03, 0x01, 0x00,  // U+007E (~)
 };
 
-font mono8x8Col{8, 8, font8x8Col, ascii2font8x8Index, sizeof(font8x8Col), sizeof(ascii2font8x8Index)};
-font mono8x8Row{8, 8, font8x8Row, ascii2font8x8Index, sizeof(font8x8Row), sizeof(ascii2font8x8Index)};
-font mono8x8RowFlip{8, 8, font8x8RowFlipped, ascii2font8x8Index, sizeof(font8x8RowFlipped), sizeof(ascii2font8x8Index)};
+const font mono8x8Col{8, 8, font8x8Col, ascii2font8x8Index, sizeof(font8x8Col), sizeof(ascii2font8x8Index)};
+const font mono8x8Row{8, 8, font8x8Row, ascii2font8x8Index, sizeof(font8x8Row), sizeof(ascii2font8x8Index)};
+const font mono8x8RowFlip{8, 8, font8x8RowFlipped, ascii2font8x8Index, sizeof(font8x8RowFlipped), sizeof(ascii2font8x8Index)};

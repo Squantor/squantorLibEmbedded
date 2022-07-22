@@ -13,8 +13,8 @@
 
 #include <fonts/font.hpp>
 
-extern font mono8x8Col;
-extern font mono8x8Row;
-extern font mono8x8RowFlip;
+extern const font mono8x8Col;
+extern const font mono8x8Row;
+extern const font mono8x8RowFlip;
 
 #endif
