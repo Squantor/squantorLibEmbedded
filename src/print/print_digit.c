@@ -27,8 +27,6 @@ SOFTWARE.
 
 const char hextable[] = "0123456789ABCDEF";
 
-result printDigit(const datastreamChar_t *__restrict__ stream, const uint8_t data)
-{
-    return dsWriteChar(stream, hextable[data & 0x0F]);
+result printDigit(const datastreamChar_t *__restrict__ stream, const uint8_t data) {
+  return dsWriteChar(stream, hextable[data & 0x0F]);
 }
-

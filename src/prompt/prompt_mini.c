@@ -26,45 +26,41 @@ SOFTWARE.
 #include <datastream.h>
 #include <string.h>
 
-#define ASCII_NUL   (0)
-#define ASCII_CR    ('\r')    // Carriage Return
-#define ASCII_LF    ('\n')    // Line Feed
+#define ASCII_NUL (0)
+#define ASCII_CR ('\r')  // Carriage Return
+#define ASCII_LF ('\n')  // Line Feed
 
-result promptProcess(promptData_t *const promptData, const datastreamChar_t *stream)
-{
-    char c;
-    result r = dsReadChar(stream, &c);
-    if(r != noError)
-    {
-        return r;
-    }
-    switch(c)
-    {
-        case ASCII_CR:
-            dsWriteChar(stream, ASCII_CR);
-            // terminate prompt string
-            promptData->buffer[promptData->bufferIndex] = ASCII_NUL;
-            // check length
-            if(strlen(promptData->buffer) == 0)
-                // zero length string, do nothing
-                return promptError;
-            // clear prompt
-            promptData->bufferIndex = 0;
-            // execute
-            return promptData->commandHandler(promptData->buffer);
-            break;
-        case ASCII_LF:
-            // just ignore line feeds
-        break;
-        default:
-            // always leave one space for zero terminator
-            if(promptData->bufferIndex < (promptData->bufSize - 1))
-            {
-                dsWriteChar(stream, c);
-                promptData->buffer[promptData->bufferIndex] = c;
-                promptData->bufferIndex++;
-            }
-            break;
-    }
-    return noError;
+result promptProcess(promptData_t *const promptData, const datastreamChar_t *stream) {
+  char c;
+  result r = dsReadChar(stream, &c);
+  if (r != noError) {
+    return r;
+  }
+  switch (c) {
+    case ASCII_CR:
+      dsWriteChar(stream, ASCII_CR);
+      // terminate prompt string
+      promptData->buffer[promptData->bufferIndex] = ASCII_NUL;
+      // check length
+      if (strlen(promptData->buffer) == 0)
+        // zero length string, do nothing
+        return promptError;
+      // clear prompt
+      promptData->bufferIndex = 0;
+      // execute
+      return promptData->commandHandler(promptData->buffer);
+      break;
+    case ASCII_LF:
+      // just ignore line feeds
+      break;
+    default:
+      // always leave one space for zero terminator
+      if (promptData->bufferIndex < (promptData->bufSize - 1)) {
+        dsWriteChar(stream, c);
+        promptData->buffer[promptData->bufferIndex] = c;
+        promptData->bufferIndex++;
+      }
+      break;
+  }
+  return noError;
 }

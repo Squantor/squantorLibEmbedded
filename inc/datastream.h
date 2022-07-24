@@ -32,38 +32,35 @@ extern "C" {
 #include <stddef.h>
 #include <stdint.h>
 
-typedef struct datastreamChar
-{
-    result (*write)(const char *c);
-    result (*read)(char *c);
-    const char *name;
+typedef struct datastreamChar {
+  result (*write)(const char *c);
+  result (*read)(char *c);
+  const char *name;
 } datastreamChar_t;
 
-typedef struct datastreamUint8
-{
-    result (*write)(const uint8_t *c);
-    result (*read)(uint8_t *c);
-    const char *name;
+typedef struct datastreamUint8 {
+  result (*write)(const uint8_t *c);
+  result (*read)(uint8_t *c);
+  const char *name;
 } datastreamUint8_t;
 
-typedef struct datastreamUint16
-{
-    result (*write)(const uint16_t *c);
-    result (*read)(uint16_t *c);
-    const char *name;
+typedef struct datastreamUint16 {
+  result (*write)(const uint16_t *c);
+  result (*read)(uint16_t *c);
+  const char *name;
 } datastreamUint16_t;
 
-#define dsWriteElement(stream, e) _Generic((stream), \
-    datastreamChar_t * : dsWriteChar, \
-    datastreamUint8_t * : dsWriteUint8, \
-    datastreamUint16_t * : dsWriteUint16 \
-    )(stream, e)
-    
-#define dsReadElement(stream, e) _Generic((stream), \
-    datastreamChar_t * : dsReadChar, \
-    datastreamUint8_t * : dsReadUint8, \
-    datastreamUint16_t * : dsReadUint16 \
-    )(stream, e)
+#define dsWriteElement(stream, e)               \
+  _Generic((stream), datastreamChar_t *         \
+           : dsWriteChar, datastreamUint8_t *   \
+           : dsWriteUint8, datastreamUint16_t * \
+           : dsWriteUint16)(stream, e)
+
+#define dsReadElement(stream, e)               \
+  _Generic((stream), datastreamChar_t *        \
+           : dsReadChar, datastreamUint8_t *   \
+           : dsReadUint8, datastreamUint16_t * \
+           : dsReadUint16)(stream, e)
 
 /* write c to stream*/
 result dsWriteChar(const datastreamChar_t *__restrict__ stream, const char c);
@@ -79,7 +76,6 @@ result dsWriteUint16(const datastreamUint16_t *__restrict__ stream, const uint16
 result dsReadUint16(const datastreamUint16_t *__restrict__ stream, uint16_t *__restrict__ c);
 /* write string ala puts to char stream */
 result dsPuts(const datastreamChar_t *__restrict__ stream, const char *__restrict__ s);
-
 
 #ifdef __cplusplus
 }

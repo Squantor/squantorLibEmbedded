@@ -28,23 +28,22 @@ SOFTWARE.
 extern "C" {
 #endif
 
-typedef enum
-{
-    // below this value when busy with parsing but not known yet
-    ansiEntered,    // detected ANSI escape, continue sequence detection
-    ansiBrackOpen,  // bracket open (Display or keyboard)
-    ansiKnown,      // boundary between busy and steady state
-    // below this value are final states
-    ansiCursorUp,   
-    ansiCursorDown, 
-    ansiCursorForward,
-    ansiCursorBackward,
-    ansiError,      // unknown sequence
+typedef enum {
+  // below this value when busy with parsing but not known yet
+  ansiEntered,    // detected ANSI escape, continue sequence detection
+  ansiBrackOpen,  // bracket open (Display or keyboard)
+  ansiKnown,      // boundary between busy and steady state
+              // below this value are final states
+  ansiCursorUp,
+  ansiCursorDown,
+  ansiCursorForward,
+  ansiCursorBackward,
+  ansiError,  // unknown sequence
 } ansiSequence;
 
 /*
  * Feed ansiParse a sequence of characters to find out what the sequence actually
- * means. 
+ * means.
  */
 ansiSequence ansiParse(char c);
 

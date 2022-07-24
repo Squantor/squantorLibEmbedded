@@ -24,7 +24,6 @@ SOFTWARE.
 
 #include <datastream.h>
 
-result dsWriteChar(const datastreamChar_t *restrict stream, const char c)
-{
-    return stream->write(&c);
+result dsWriteChar(const datastreamChar_t *restrict stream, const char c) {
+  return stream->write(&c);
 }

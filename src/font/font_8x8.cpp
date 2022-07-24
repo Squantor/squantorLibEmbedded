@@ -431,6 +431,7 @@ const uint8_t font8x8RowFlipped[760] = {
   0x02, 0x03, 0x01, 0x03, 0x02, 0x03, 0x01, 0x00,  // U+007E (~)
 };
 
+<<<<<<< HEAD
 const uint8_t font8x8SkinnyRowFlipped[760] = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Character 0x20 (32: ' ')
   0x00, 0x08, 0x08, 0x08, 0x08, 0x00, 0x08, 0x0C,  // Character 0x21 (33: '!')
@@ -529,7 +530,8 @@ const uint8_t font8x8SkinnyRowFlipped[760] = {
   0x00, 0x00, 0x00, 0x00, 0x26, 0x1A, 0x00, 0x00,  // Character 0x7e (126: '~')
 };
 
-font mono8x8Col{8, 8, font8x8Col, ascii2font8x8Index};
-font mono8x8Row{8, 8, font8x8Row, ascii2font8x8Index};
-font mono8x8RowFlip{8, 8, font8x8RowFlipped, ascii2font8x8Index};
-font mono8x8SkinnyRowFlip{8, 8, font8x8SkinnyRowFlipped, ascii2font8x8Index};
+const font mono8x8Col{8, 8, font8x8Col, ascii2font8x8Index};
+const font mono8x8Row{8, 8, font8x8Row, ascii2font8x8Index};
+const font mono8x8RowFlip{8, 8, font8x8RowFlipped, ascii2font8x8Index};
+const font mono8x8SkinnyRowFlip{8, 8, font8x8SkinnyRowFlipped, ascii2font8x8Index};
+

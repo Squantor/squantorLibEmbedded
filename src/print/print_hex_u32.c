@@ -26,29 +26,21 @@ SOFTWARE.
 #include <results.h>
 
 // TODO: refactor this!
-result printHexU32(const datastreamChar_t *__restrict__ stream, const uint32_t data)
-{
-    result printResult;
-    printResult = printDigit(stream, data>>28);
-    if(printResult != noError)
-        return printResult;
-    printResult = printDigit(stream, data>>24);
-    if(printResult != noError)
-        return printResult;
-    printResult = printDigit(stream, data>>20);
-    if(printResult != noError)
-        return printResult;
-    printResult = printDigit(stream, data>>16);
-    if(printResult != noError)
-        return printResult;
-    printResult = printDigit(stream, data>>12);
-    if(printResult != noError)
-        return printResult;
-    printResult = printDigit(stream, data>>8);
-    if(printResult != noError)
-        return printResult;
-    printResult = printDigit(stream, data>>4);
-    if(printResult != noError)
-        return printResult;
-    return printDigit(stream, data);
+result printHexU32(const datastreamChar_t *__restrict__ stream, const uint32_t data) {
+  result printResult;
+  printResult = printDigit(stream, data >> 28);
+  if (printResult != noError) return printResult;
+  printResult = printDigit(stream, data >> 24);
+  if (printResult != noError) return printResult;
+  printResult = printDigit(stream, data >> 20);
+  if (printResult != noError) return printResult;
+  printResult = printDigit(stream, data >> 16);
+  if (printResult != noError) return printResult;
+  printResult = printDigit(stream, data >> 12);
+  if (printResult != noError) return printResult;
+  printResult = printDigit(stream, data >> 8);
+  if (printResult != noError) return printResult;
+  printResult = printDigit(stream, data >> 4);
+  if (printResult != noError) return printResult;
+  return printDigit(stream, data);
 }

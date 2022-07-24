@@ -25,11 +25,9 @@ SOFTWARE.
 #include <datastream.h>
 #include <results.h>
 
-result printHexU8(const datastreamChar_t *__restrict__ stream, const uint8_t data)
-{
-    result printResult;
-    printResult = printDigit(stream, data>>4);
-    if(printResult != noError)
-        return printResult;
-    return printDigit(stream, data);
+result printHexU8(const datastreamChar_t *__restrict__ stream, const uint8_t data) {
+  result printResult;
+  printResult = printDigit(stream, data >> 4);
+  if (printResult != noError) return printResult;
+  return printDigit(stream, data);
 }

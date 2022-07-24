@@ -34,7 +34,7 @@ extern "C" {
 
 /* pass stringqueue to commandline prompt */
 void cmdlinePromptInit(const t_queueString *q);
-/* 
+/*
 Every call the stream will be checked for a single character, if present it will be parsed.
 When some characters need to be returned, they will be output via stream.
 When a full commandline is input, calls cmdlineParse to interpret command.

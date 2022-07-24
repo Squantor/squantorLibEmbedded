@@ -24,14 +24,11 @@ SOFTWARE.
 
 #include <datastream.h>
 
-result dsPuts(const datastreamChar_t *stream, const char *restrict s)
-{
-    while(*s != '\0')
-    {
-        result writeResult = stream->write(s);
-        if(writeResult != noError)
-            return writeResult;
-        s++;
-    }
-    return noError;
+result dsPuts(const datastreamChar_t *stream, const char *restrict s) {
+  while (*s != '\0') {
+    result writeResult = stream->write(s);
+    if (writeResult != noError) return writeResult;
+    s++;
+  }
+  return noError;
 }

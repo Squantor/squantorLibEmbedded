@@ -37,7 +37,7 @@ SOFTWARE.
 extern "C" {
 #endif
 
-#define CMDLINE_MAX_LENGTH  64
+#define CMDLINE_MAX_LENGTH 64
 
 #ifdef __cplusplus
 }

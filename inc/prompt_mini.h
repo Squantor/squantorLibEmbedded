@@ -32,12 +32,11 @@ extern "C" {
 #include <stddef.h>
 #include <datastream.h>
 
-typedef struct promptData
-{
-    char *buffer;
-    unsigned int bufferIndex;
-    const size_t bufSize;
-    result (*const commandHandler)(char *const command);
+typedef struct promptData {
+  char *buffer;
+  unsigned int bufferIndex;
+  const size_t bufSize;
+  result (*const commandHandler)(char *const command);
 } promptData_t;
 
 result promptProcess(promptData_t *const promptData, const datastreamChar_t *stream);
