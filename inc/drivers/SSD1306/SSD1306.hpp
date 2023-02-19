@@ -80,7 +80,7 @@ consteval uint8_t chargePumpOn(bool pumpOn) {
     return 0x10;
 }
 constexpr uint8_t setContrast = 0x81; /*!< set contrast level */
-consteval uint8_t ConstrastLevel(uint8_t level) {
+consteval uint8_t ContrastLevel(uint8_t level) {
   return level;
 }
 consteval uint8_t setDisplayStartLine(uint8_t address) {
@@ -128,7 +128,7 @@ const uint8_t init128x64[] = {SSD1306::displaySleep,
                               SSD1306::setComPinsHardware,
                               SSD1306::ComPinsHardware(SSD1306::alternatingNormal),
                               SSD1306::setContrast,
-                              SSD1306::ConstrastLevel(0x01),
+                              SSD1306::ContrastLevel(0x01),
                               SSD1306::setPrechargeLevel,
                               SSD1306::prechargeLevel(0xF1),
                               SSD1306::setVcomDeselectLevel,
@@ -154,7 +154,7 @@ const uint8_t init128x32[] = {SSD1306::displaySleep,
                               SSD1306::setComPinsHardware,
                               SSD1306::ComPinsHardware(SSD1306::sequentialNormal),
                               SSD1306::setContrast,
-                              SSD1306::ConstrastLevel(0x01),
+                              SSD1306::ContrastLevel(0x01),
                               SSD1306::setPrechargeLevel,
                               SSD1306::prechargeLevel(0xF1),
                               SSD1306::setVcomDeselectLevel,
