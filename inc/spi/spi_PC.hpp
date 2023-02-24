@@ -40,14 +40,16 @@ class spiPeripheral {
     size_t currentIndex = 0;
     size_t endIndex = bitCount / (sizeof(uint16_t) * 8);
     uint32_t bitsRemaining = bitCount;
+    (void)chipEnable;
     for (; currentIndex < endIndex; currentIndex++) {
       peripheralRegisters.data[currentIndex] = data[currentIndex];
       bitsRemaining -= 16;
     }
-    // handle non 16 bits
-    // create mask, set value
+    // handle last bits
     uint16_t mask = ~(0xFFFF << bitsRemaining);
+    peripheralRegisters.data[currentIndex] = data[currentIndex] & mask;
     peripheralRegisters.bits = bitCount;
+    (void)lastTransaction;
   }
   // TODO transceive
   // TODO receive
