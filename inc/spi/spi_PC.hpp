@@ -7,7 +7,7 @@
 /**
  *\file spi_PC.hpp
  *
- * PC SPI class template that is more used for mocking/testing
+ * PC SPI class template that is used for mocking/testing
  *
  */
 #ifndef SPI_PC_HPP
@@ -19,16 +19,15 @@
 #include <array.hpp>
 
 namespace util {
-namespace spi {
-namespace PC {
+namespace hardware_mocks {
 template <size_t N>
-struct registers {
+struct spiRegisters {
   uint32_t bits;
   util::array<uint16_t, N> data;
 };
 
 template <auto& peripheralRegisters, typename chipEnables>
-class spiPeripheral {
+class spi {
  public:
   void init() {
     peripheralRegisters.bits = 0;
@@ -53,12 +52,10 @@ class spiPeripheral {
   }
   // TODO transceive
   // TODO receive
-  // TODO transmit
  private:
 };
 
-}  // namespace PC
-}  // namespace spi
+}  // namespace hardware_mocks
 }  // namespace util
 
 #endif
