@@ -26,7 +26,7 @@ class spi {
       x = 0;
     }
   }
-  void transmit(chipEnables chipEnable, uint16_t* data, uint32_t bitCount, bool lastTransaction) {
+  void transmit(chipEnables chipEnable, const uint16_t* data, uint32_t bitCount, bool lastTransaction) {
     size_t currentIndex = 0;
     size_t endIndex = bitCount / (sizeof(uint16_t) * 8);
     uint32_t bitsRemaining = bitCount;
