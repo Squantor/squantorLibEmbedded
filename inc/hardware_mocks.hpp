@@ -15,7 +15,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <array.hpp>
+#include <array>
 
 namespace util {
 namespace hardware_mocks {

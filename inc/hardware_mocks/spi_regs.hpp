@@ -13,12 +13,6 @@
 #ifndef SPI_REGS_HPP
 #define SPI_REGS_HPP
 
-namespace registers {
-template <size_t N>
-struct spiRegisters {
-  uint32_t bits;
-  util::array<uint16_t, N> data;
-};
-}  // namespace registers
+namespace registers {}  // namespace registers
 
 #endif
