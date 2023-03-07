@@ -5,26 +5,17 @@
  * For conditions of distribution and use, see LICENSE file
  */
 /**
- *\file spi_PC.hpp
+ *\file spi.hpp
  *
- * PC SPI class template that is used for mocking/testing
+ * hardware mock SPI class template used for testing drivers but also useful for other things
  *
  */
-#ifndef SPI_PC_HPP
-#define SPI_PC_HPP
+#ifndef SPI_HPP
+#define SPI_HPP
 
 #include <cstdint>
 #include <cstddef>
-#include <cstring>
 #include <array.hpp>
-
-namespace util {
-namespace hardware_mocks {
-template <size_t N>
-struct spiRegisters {
-  uint32_t bits;
-  util::array<uint16_t, N> data;
-};
 
 template <auto& peripheralRegisters, typename chipEnables>
 class spi {
@@ -54,8 +45,5 @@ class spi {
   // TODO receive
  private:
 };
-
-}  // namespace hardware_mocks
-}  // namespace util
 
 #endif
