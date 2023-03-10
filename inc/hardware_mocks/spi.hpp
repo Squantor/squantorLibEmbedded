@@ -27,7 +27,7 @@ enum class spiChipEnables : uint16_t {
 template <size_t N, typename chipEnables>
 class spi {
  public:
-  spi() : transmitIndex{0}, receiveIndex{0} {}
+  spi() : spiError{0}, transmitIndex{0}, receiveIndex{0}, currentReceiveIndex{0} {}
   /**
    * @brief clears this simulated SPI peripheral
    *
@@ -38,6 +38,7 @@ class spi {
     transmitIndex = 0;
     receiveIndex = 0;
     spiError = 0;
+    currentReceiveIndex = 0;
   }
 
   /**
@@ -49,14 +50,7 @@ class spi {
    * @param lastAction
    */
   void transmit(chipEnables device, const uint16_t* transmitBuffer, uint16_t bitcount, bool lastAction) {
-    // TODO: added spi error reporting
-    size_t dataElementCount = bitcount / 16 + 1;
-    txTransactions[transmitIndex++] = bitcount;
-    txTransactions[transmitIndex++] = static_cast<uint16_t>(device);
-    txTransactions[transmitIndex++] = static_cast<uint16_t>(lastAction);
-    for (size_t i = 0; i < dataElementCount; i++) {
-      txTransactions[transmitIndex++] = transmitBuffer[i];
-    }
+    transactionAdd(txTransactions.data(), transmitIndex, device, transmitBuffer, bitcount, lastAction);
   }
 
   /**
@@ -68,10 +62,20 @@ class spi {
    * @param lastAction
    */
   void receive(chipEnables device, uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
-    // TODO: added spi error reporting
-    // Put transaction data into transactionsReceive
-    // compute index count
-    // copy data in receive buffer
+    int nextTransaction = transactionNext(receiveBuffer, currentReceiveIndex);
+    // is there a next transaction? No? error out
+    if (nextTransaction == 0) {
+      // TODO set SPI error
+      return;
+    }
+    // TODO: get all transaction data
+    chipEnables receiveEnable;
+    uint16_t receiveBitcount;
+    bool receiveLastAction;
+    transactionGet(rxTransactions, currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
+    // compare the retrieved transaction with what you expect
+
+    currentReceiveIndex = nextTransaction;
   }
 
   /**
@@ -103,6 +107,25 @@ class spi {
     while (index != 0) {
       transactionCount++;
       index = transactionNext(txTransactions.data(), index);
+      if (index == 0) {
+        break;
+      }
+    }
+    return transactionCount;
+  }
+
+  /**
+   * @brief Return amount of receive transactions
+   *
+   * @return int
+   */
+  int rxTransactionCount(void) {
+    size_t index = transactionNext(rxTransactions.data(), 0);
+    int transactionCount = 0;
+    // iterate through transmit transactions
+    while (index != 0) {
+      transactionCount++;
+      index = transactionNext(rxTransactions.data(), index);
       if (index == 0) {
         break;
       }
@@ -160,23 +183,60 @@ class spi {
    * @param bitcount
    * @param lastAction
    */
-  void rxTransactionAdd(chipEnables device, const uint16_t* transmitBuffer, uint16_t bitcount, bool lastAction) {
-    // TODO: added spi error reporting
-    size_t dataElementCount = bitcount / 16 + 1;
-    rxTransactions[receiveIndex++] = bitcount;
-    rxTransactions[receiveIndex++] = static_cast<uint16_t>(device);
-    rxTransactions[receiveIndex++] = static_cast<uint16_t>(lastAction);
-    for (size_t i = 0; i < dataElementCount; i++) {
-      rxTransactions[receiveIndex++] = transmitBuffer[i];
-    }
+  void rxTransactionAdd(chipEnables device, const uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
+    transactionAdd(rxTransactions.data(), receiveIndex, device, receiveBuffer, bitcount, lastAction);
   }
 
-  int spiError; /**< error number if somebthing bad occurs TODO change to error enum */
-  ::std::array<uint16_t, N> txTransactions;
-  ::std::array<uint16_t, N> rxTransactions;
-  size_t transmitIndex, receiveIndex; /**< BIT indices of where we are */
+  int spiError;                             /**< error number if somebthing bad occurs TODO change to error enum */
+  ::std::array<uint16_t, N> txTransactions; /**< Transmit transaction data buffer */
+  ::std::array<uint16_t, N> rxTransactions; /**< Receive transaction data buffer */
+  size_t transmitIndex, receiveIndex;       /**< BIT indices of where we are */
+  int currentReceiveIndex;                  /**< Which receive transaction is now current */
 
  private:
+  /**
+   * @brief Add transaction to a buffer and update its current index
+   *
+   * @param buffer            Transaction buffer
+   * @param index             pointer to current transaction buffer index
+   * @param device            Device enable in transaction
+   * @param transactionBuffer Transaction data
+   * @param bitcount          Bits in transaction
+   * @param lastAction        Last transaction
+   */
+  void transactionAdd(uint16_t* buffer, size_t& index, chipEnables device, const uint16_t* transactionBuffer, uint16_t bitcount,
+                      bool lastAction) {
+    // TODO: added spi error reporting
+    // TODO change
+    size_t dataElementCount = bitcount / 16 + 1;
+    buffer[index++] = bitcount;
+    buffer[index++] = static_cast<uint16_t>(device);
+    buffer[index++] = static_cast<uint16_t>(lastAction);
+    for (size_t i = 0; i < dataElementCount; i++) {
+      buffer[index++] = transactionBuffer[i];
+    }
+  }
+  /**
+   * @brief Get transaction from a buffer at index
+   *
+   * @param buffer            Transaction buffer
+   * @param index             pointer to current transaction buffer index
+   * @param device            Device enable in transaction
+   * @param transactionBuffer Transaction data
+   * @param bitcount          Bits in transaction
+   * @param lastAction        Last transaction
+   */
+  void transactionGet(uint16_t* buffer, size_t index, chipEnables& device, const uint16_t* transactionBuffer, uint16_t& bitcount,
+                      bool& lastAction) {
+    // TODO: added spi error reporting
+    size_t dataElementCount = bitcount / 16 + 1;
+    bitcount = buffer[index++];
+    static_cast<uint16_t&>(device) = buffer[index++];
+    static_cast<bool&>(lastAction) = buffer[index++];
+    for (size_t i = 0; i < dataElementCount; i++) {
+      transactionBuffer[i] = buffer[index++];
+    }
+  }
   /**
    * @brief Change transaction number to array index
    *
