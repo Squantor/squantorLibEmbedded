@@ -24,10 +24,17 @@ enum class spiChipEnables : uint16_t {
   SPI_DEV_3 = 4,
 };
 
+enum class spiErrors {
+  noError = 0,
+  transactionNotFound = -1,
+  transactionInvalid = -2,
+  mismatch = -3,
+};
+
 template <size_t N, typename chipEnables>
 class spi {
  public:
-  spi() : spiError{0}, transmitIndex{0}, receiveIndex{0}, currentReceiveIndex{0} {}
+  spi() : spiError{spiErrors::noError}, transmitIndex{0}, receiveIndex{0}, currentReceiveIndex{0} {}
   /**
    * @brief clears this simulated SPI peripheral
    *
@@ -37,7 +44,7 @@ class spi {
     for (auto& data : rxTransactions) data = 0;
     transmitIndex = 0;
     receiveIndex = 0;
-    spiError = 0;
+    spiError = spiErrors::noError;
     currentReceiveIndex = 0;
   }
 
@@ -62,19 +69,29 @@ class spi {
    * @param lastAction
    */
   void receive(chipEnables device, uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
-    int nextTransaction = transactionNext(receiveBuffer, currentReceiveIndex);
+    int nextTransaction = transactionNext(rxTransactions.data(), currentReceiveIndex);
     // is there a next transaction? No? error out
     if (nextTransaction == 0) {
-      // TODO set SPI error
+      spiError = spiErrors::transactionNotFound;
       return;
     }
-    // TODO: get all transaction data
     chipEnables receiveEnable;
     uint16_t receiveBitcount;
     bool receiveLastAction;
-    transactionGet(rxTransactions, currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
+    transactionGet(rxTransactions.data(), currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
     // compare the retrieved transaction with what you expect
-
+    if (device != receiveEnable) {
+      spiError = spiErrors::mismatch;
+      return;
+    }
+    if (receiveBitcount != bitcount) {
+      spiError = spiErrors::mismatch;
+      return;
+    }
+    if (receiveLastAction != lastAction) {
+      spiError = spiErrors::mismatch;
+      return;
+    }
     currentReceiveIndex = nextTransaction;
   }
 
@@ -187,7 +204,7 @@ class spi {
     transactionAdd(rxTransactions.data(), receiveIndex, device, receiveBuffer, bitcount, lastAction);
   }
 
-  int spiError;                             /**< error number if somebthing bad occurs TODO change to error enum */
+  spiErrors spiError;                       /**< error if something bad occurs */
   ::std::array<uint16_t, N> txTransactions; /**< Transmit transaction data buffer */
   ::std::array<uint16_t, N> rxTransactions; /**< Receive transaction data buffer */
   size_t transmitIndex, receiveIndex;       /**< BIT indices of where we are */
@@ -226,13 +243,13 @@ class spi {
    * @param bitcount          Bits in transaction
    * @param lastAction        Last transaction
    */
-  void transactionGet(uint16_t* buffer, size_t index, chipEnables& device, const uint16_t* transactionBuffer, uint16_t& bitcount,
+  void transactionGet(const uint16_t* buffer, size_t index, chipEnables& device, uint16_t* transactionBuffer, uint16_t& bitcount,
                       bool& lastAction) {
-    // TODO: added spi error reporting
-    size_t dataElementCount = bitcount / 16 + 1;
     bitcount = buffer[index++];
-    static_cast<uint16_t&>(device) = buffer[index++];
-    static_cast<bool&>(lastAction) = buffer[index++];
+    // TODO: add reporting of way to big bitcount
+    device = static_cast<chipEnables>(buffer[index++]);
+    lastAction = static_cast<bool>(buffer[index++]);
+    size_t dataElementCount = bitcount / 16 + 1;
     for (size_t i = 0; i < dataElementCount; i++) {
       transactionBuffer[i] = buffer[index++];
     }
