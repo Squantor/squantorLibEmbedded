@@ -16,6 +16,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <array>
+#include <span>
 
 enum class spiChipEnables : uint16_t {
   SPI_DEV_0 = 1,
@@ -34,6 +35,10 @@ enum class spiErrors {
 template <size_t N, typename chipEnables>
 class spi {
  public:
+  /**
+   * @brief Construct a new spi object
+   *
+   */
   spi() : spiError{spiErrors::noError}, transmitIndex{0}, receiveIndex{0}, currentReceiveIndex{0} {}
   /**
    * @brief clears this simulated SPI peripheral
@@ -56,8 +61,8 @@ class spi {
    * @param bitcount
    * @param lastAction
    */
-  void transmit(chipEnables device, const uint16_t* transmitBuffer, uint16_t bitcount, bool lastAction) {
-    transactionAdd(txTransactions.data(), transmitIndex, device, transmitBuffer, bitcount, lastAction);
+  void transmit(chipEnables device, const std::span<uint16_t> transmitBuffer, uint16_t bitcount, bool lastAction) {
+    transactionAdd(txTransactions, transmitIndex, device, transmitBuffer, bitcount, lastAction);
   }
 
   /**
@@ -68,8 +73,8 @@ class spi {
    * @param bitcount
    * @param lastAction
    */
-  void receive(chipEnables device, uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
-    int nextTransaction = transactionNext(rxTransactions.data(), currentReceiveIndex);
+  void receive(chipEnables device, std::span<uint16_t> receiveBuffer, uint16_t bitcount, bool lastAction) {
+    int nextTransaction = transactionNext(rxTransactions, currentReceiveIndex);
     // is there a next transaction? No? error out
     if (nextTransaction == 0) {
       spiError = spiErrors::transactionNotFound;
@@ -78,7 +83,7 @@ class spi {
     chipEnables receiveEnable;
     uint16_t receiveBitcount;
     bool receiveLastAction;
-    transactionGet(rxTransactions.data(), currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
+    transactionGet(rxTransactions, currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
     // compare the retrieved transaction with what you expect
     if (device != receiveEnable) {
       spiError = spiErrors::mismatch;
@@ -104,20 +109,21 @@ class spi {
    * @param bitcount
    * @param lastAction
    */
-  void transceive(chipEnables device, const uint16_t* transmitBuffer, uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
-    int nextTransaction = transactionNext(rxTransactions.data(), currentReceiveIndex);
+  void transceive(chipEnables device, const std::span<uint16_t> transmitBuffer, std::span<uint16_t> receiveBuffer,
+                  uint16_t bitcount, bool lastAction) {
+    int nextTransaction = transactionNext(rxTransactions, currentReceiveIndex);
     // is there a next transaction? No? error out
     if (nextTransaction == 0) {
       spiError = spiErrors::transactionNotFound;
       return;
     }
 
-    transactionAdd(txTransactions.data(), transmitIndex, device, transmitBuffer, bitcount, lastAction);
+    transactionAdd(txTransactions, transmitIndex, device, transmitBuffer, bitcount, lastAction);
 
     chipEnables receiveEnable;
     uint16_t receiveBitcount;
     bool receiveLastAction;
-    transactionGet(rxTransactions.data(), currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
+    transactionGet(rxTransactions, currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
     // compare the retrieved transaction with what you expect
     if (device != receiveEnable) {
       spiError = spiErrors::mismatch;
@@ -140,12 +146,12 @@ class spi {
    * @return size_t
    */
   int txTransactionCount(void) {
-    size_t index = transactionNext(txTransactions.data(), 0);
+    size_t index = transactionNext(txTransactions, 0);
     int transactionCount = 0;
     // iterate through transmit transactions
     while (index != 0) {
       transactionCount++;
-      index = transactionNext(txTransactions.data(), index);
+      index = transactionNext(txTransactions, index);
       if (index == 0) {
         break;
       }
@@ -159,12 +165,12 @@ class spi {
    * @return int
    */
   int rxTransactionCount(void) {
-    size_t index = transactionNext(rxTransactions.data(), 0);
+    size_t index = transactionNext(rxTransactions, 0);
     int transactionCount = 0;
     // iterate through transmit transactions
     while (index != 0) {
       transactionCount++;
-      index = transactionNext(rxTransactions.data(), index);
+      index = transactionNext(rxTransactions, index);
       if (index == 0) {
         break;
       }
@@ -179,7 +185,7 @@ class spi {
    * @return uint16_t   transferred bits in transaction
    */
   uint16_t txTransactionGetBits(int transaction) {
-    size_t index = transactionToIndex(txTransactions.data(), transaction);
+    size_t index = transactionToIndex(txTransactions, transaction);
     return txTransactions[index];
   }
 
@@ -190,7 +196,7 @@ class spi {
    * @return uint16_t   chip enable from transaction
    */
   uint16_t txTransactionGetChip(int transaction) {
-    size_t index = transactionToIndex(txTransactions.data(), transaction);
+    size_t index = transactionToIndex(txTransactions, transaction);
     return txTransactions[index + 1];
   }
   /**
@@ -200,7 +206,7 @@ class spi {
    * @return uint16_t   get last transmission indicator, 0 for not, non zero for last
    */
   uint16_t txTransactionGetLast(int transaction) {
-    size_t index = transactionToIndex(txTransactions.data(), transaction);
+    size_t index = transactionToIndex(txTransactions, transaction);
     return txTransactions[index + 2];
   }
   /**
@@ -210,7 +216,7 @@ class spi {
    * @return uint16_t*  pointer to first bits in uint16_t array
    */
   uint16_t* txTransactionGetData(int transaction) {
-    size_t index = transactionToIndex(txTransactions.data(), transaction);
+    size_t index = transactionToIndex(txTransactions, transaction);
     return &txTransactions[index + 3];
   }
 
@@ -222,8 +228,8 @@ class spi {
    * @param bitcount
    * @param lastAction
    */
-  void rxTransactionAdd(chipEnables device, const uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
-    transactionAdd(rxTransactions.data(), receiveIndex, device, receiveBuffer, bitcount, lastAction);
+  void rxTransactionAdd(chipEnables device, const std::span<uint16_t> receiveBuffer, uint16_t bitcount, bool lastAction) {
+    transactionAdd(rxTransactions, receiveIndex, device, receiveBuffer, bitcount, lastAction);
   }
 
   spiErrors spiError;                     /**< error if something bad occurs */
@@ -243,8 +249,8 @@ class spi {
    * @param bitcount          Bits in transaction
    * @param lastAction        Last transaction
    */
-  void transactionAdd(uint16_t* buffer, size_t& index, chipEnables device, const uint16_t* transactionBuffer, uint16_t bitcount,
-                      bool lastAction) {
+  void transactionAdd(std::span<uint16_t> buffer, size_t& index, chipEnables device, const std::span<uint16_t> transactionBuffer,
+                      uint16_t bitcount, bool lastAction) {
     // TODO: added spi error reporting
     // TODO change
     size_t dataElementCount = bitcount / 16 + 1;
@@ -265,8 +271,8 @@ class spi {
    * @param bitcount          Bits in transaction
    * @param lastAction        Last transaction
    */
-  void transactionGet(const uint16_t* buffer, size_t index, chipEnables& device, uint16_t* transactionBuffer, uint16_t& bitcount,
-                      bool& lastAction) {
+  void transactionGet(const std::span<uint16_t> buffer, size_t index, chipEnables& device, std::span<uint16_t> transactionBuffer,
+                      uint16_t& bitcount, bool& lastAction) {
     bitcount = buffer[index++];
     // TODO: add reporting of way to big bitcount
     device = static_cast<chipEnables>(buffer[index++]);
@@ -283,7 +289,7 @@ class spi {
    * @param transaction transaction number
    * @return size_t
    */
-  size_t transactionToIndex(const uint16_t* buffer, int transaction) {
+  size_t transactionToIndex(const std::span<uint16_t> buffer, int transaction) {
     size_t index = 0;
     int transactionCount = 1;
     // iterate through transmit transactions
@@ -302,7 +308,7 @@ class spi {
    * @param index   input index
    * @return size_t index of next transaction, 0 for end or invalid
    */
-  size_t transactionNext(const uint16_t* buffer, size_t index) {
+  size_t transactionNext(const std::span<uint16_t> buffer, size_t index) {
     if (buffer[index] == 0) return 0;
     size_t newIndex = index + (buffer[index] / 16) + 4;
     if (newIndex > N) return 0;
