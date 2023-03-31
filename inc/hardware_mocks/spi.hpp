@@ -40,8 +40,8 @@ class spi {
    *
    */
   void initialize(void) {
-    for (auto& data : txTransactions) data = 0;
-    for (auto& data : rxTransactions) data = 0;
+    txTransactions.fill(0);
+    rxTransactions.fill(0);
     transmitIndex = 0;
     receiveIndex = 0;
     spiError = spiErrors::noError;
@@ -105,11 +105,33 @@ class spi {
    * @param lastAction
    */
   void transceive(chipEnables device, const uint16_t* transmitBuffer, uint16_t* receiveBuffer, uint16_t bitcount, bool lastAction) {
-    // TODO: added spi error reporting
-    // Put transaction data into transactionsReceive
-    // compute index count for transmit and receive
-    // copy data from transactionsReceive in receive buffer
-    // put transmit buffer data in transactionsTransmit
+    int nextTransaction = transactionNext(rxTransactions.data(), currentReceiveIndex);
+    // is there a next transaction? No? error out
+    if (nextTransaction == 0) {
+      spiError = spiErrors::transactionNotFound;
+      return;
+    }
+
+    transactionAdd(txTransactions.data(), transmitIndex, device, transmitBuffer, bitcount, lastAction);
+
+    chipEnables receiveEnable;
+    uint16_t receiveBitcount;
+    bool receiveLastAction;
+    transactionGet(rxTransactions.data(), currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
+    // compare the retrieved transaction with what you expect
+    if (device != receiveEnable) {
+      spiError = spiErrors::mismatch;
+      return;
+    }
+    if (receiveBitcount != bitcount) {
+      spiError = spiErrors::mismatch;
+      return;
+    }
+    if (receiveLastAction != lastAction) {
+      spiError = spiErrors::mismatch;
+      return;
+    }
+    currentReceiveIndex = nextTransaction;
   }
 
   /**
@@ -204,11 +226,11 @@ class spi {
     transactionAdd(rxTransactions.data(), receiveIndex, device, receiveBuffer, bitcount, lastAction);
   }
 
-  spiErrors spiError;                       /**< error if something bad occurs */
-  ::std::array<uint16_t, N> txTransactions; /**< Transmit transaction data buffer */
-  ::std::array<uint16_t, N> rxTransactions; /**< Receive transaction data buffer */
-  size_t transmitIndex, receiveIndex;       /**< BIT indices of where we are */
-  int currentReceiveIndex;                  /**< Which receive transaction is now current */
+  spiErrors spiError;                     /**< error if something bad occurs */
+  std::array<uint16_t, N> txTransactions; /**< Transmit transaction data buffer */
+  std::array<uint16_t, N> rxTransactions; /**< Receive transaction data buffer */
+  size_t transmitIndex, receiveIndex;     /**< BIT indices of where we are */
+  int currentReceiveIndex;                /**< Which receive transaction is now current */
 
  private:
   /**
