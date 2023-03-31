@@ -41,7 +41,8 @@ $(LIB_DIR)/src/pulse_density/pulse_density.c \
 $(LIB_DIR)/src/pulse_density/pulse_density.cpp \
 $(LIB_DIR)/src/bit/bitblit1d.cpp \
 $(LIB_DIR)/src/bit/readmodifywrite.cpp \
-$(LIB_DIR)/src/bit/bitblit2d.cpp
+$(LIB_DIR)/src/bit/bitblit2d.cpp \
+$(LIB_DIR)/src/parity/parity.c
 
 $(NAME)_LIB_INCLUDES := -I$(LIB_DIR)/inc
 
