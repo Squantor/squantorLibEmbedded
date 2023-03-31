@@ -254,8 +254,6 @@ class spi {
    */
   void transactionAdd(std::span<uint16_t> buffer, size_t& index, chipEnables device, const std::span<uint16_t> transactionBuffer,
                       uint16_t bitcount, bool lastAction) {
-    // TODO: added spi error reporting
-    // TODO change
     size_t dataElementCount = bitcount / 16 + 1;
     buffer[index++] = bitcount;
     buffer[index++] = static_cast<uint16_t>(device);
@@ -277,7 +275,6 @@ class spi {
   void transactionGet(const std::span<uint16_t> buffer, size_t index, chipEnables& device, std::span<uint16_t> transactionBuffer,
                       uint16_t& bitcount, bool& lastAction) {
     bitcount = buffer[index++];
-    // TODO: add reporting of way to big bitcount
     device = static_cast<chipEnables>(buffer[index++]);
     lastAction = static_cast<bool>(buffer[index++]);
     size_t dataElementCount = bitcount / 16 + 1;
