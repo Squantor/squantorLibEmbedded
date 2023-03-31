@@ -54,36 +54,39 @@ class spi {
   }
 
   /**
-   * @brief
+   * @brief Transmit data to SPI
    *
-   * @param device
-   * @param transmitBuffer
-   * @param bitcount
-   * @param lastAction
+   * @param device SPI device to transmit to
+   * @param transmitBuffer data to transmit
+   * @param bitcount amount of bits to transmit
+   * @param lastAction is this the last action? This will disable the chip select
    */
   void transmit(chipEnables device, const std::span<uint16_t> transmitBuffer, uint16_t bitcount, bool lastAction) {
     transactionAdd(txTransactions, transmitIndex, device, transmitBuffer, bitcount, lastAction);
   }
 
   /**
-   * @brief
+   * @brief Receive data from SPI
    *
-   * @param device
-   * @param receiveBuffer
-   * @param bitcount
-   * @param lastAction
+   * @param device SPI device to receive data from
+   * @param receiveBuffer buffer to put data into
+   * @param bitcount amount of bits to receive
+   * @param lastAction is this the last action? This will disable the chip select
    */
   void receive(chipEnables device, std::span<uint16_t> receiveBuffer, uint16_t bitcount, bool lastAction) {
     int nextTransaction = transactionNext(rxTransactions, currentReceiveIndex);
-    // is there a next transaction? No? error out
+
     if (nextTransaction == 0) {
       spiError = spiErrors::transactionNotFound;
       return;
     }
+
     chipEnables receiveEnable;
     uint16_t receiveBitcount;
     bool receiveLastAction;
+
     transactionGet(rxTransactions, currentReceiveIndex, receiveEnable, receiveBuffer, receiveBitcount, receiveLastAction);
+
     // compare the retrieved transaction with what you expect
     if (device != receiveEnable) {
       spiError = spiErrors::mismatch;
@@ -101,13 +104,13 @@ class spi {
   }
 
   /**
-   * @brief
+   * @brief Transmit and recieve data via SPI
    *
-   * @param device
-   * @param transmitBuffer
-   * @param receiveBuffer
-   * @param bitcount
-   * @param lastAction
+   * @param device SPI device to use
+   * @param transmitBuffer data to transmit
+   * @param receiveBuffer buffer to put data into
+   * @param bitcount amount of bits
+   * @param lastAction is this the last action? This will disable the chip select
    */
   void transceive(chipEnables device, const std::span<uint16_t> transmitBuffer, std::span<uint16_t> receiveBuffer,
                   uint16_t bitcount, bool lastAction) {
@@ -143,7 +146,7 @@ class spi {
   /**
    * @brief Return amount of transmit transactions
    *
-   * @return size_t
+   * @return int count of transmit transactions in mock transmit buffer
    */
   int txTransactionCount(void) {
     size_t index = transactionNext(txTransactions, 0);
@@ -162,7 +165,7 @@ class spi {
   /**
    * @brief Return amount of receive transactions
    *
-   * @return int
+   * @return int count of transmit transactions in mock receive buffer
    */
   int rxTransactionCount(void) {
     size_t index = transactionNext(rxTransactions, 0);
@@ -223,10 +226,10 @@ class spi {
   /**
    * @brief Add a transaction to be received
    *
-   * @param device
-   * @param transmitBuffer
-   * @param bitcount
-   * @param lastAction
+   * @param device SPI device for the transaction
+   * @param transmitBuffer data to be used in mock receive
+   * @param bitcount amount of bits used in mock receive
+   * @param lastAction if this is the last transaction
    */
   void rxTransactionAdd(chipEnables device, const std::span<uint16_t> receiveBuffer, uint16_t bitcount, bool lastAction) {
     transactionAdd(rxTransactions, receiveIndex, device, receiveBuffer, bitcount, lastAction);
