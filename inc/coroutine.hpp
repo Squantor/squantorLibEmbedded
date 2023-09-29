@@ -14,20 +14,7 @@
 #ifndef COROUTINE_HPP
 #define COROUTINE_HPP
 
-/**
- * @brief Token concatenation detail
- */
-
-#define TOKENCONCAT_DETAIL(x, y) x##y
-/**
- * @brief Concatenates two tokens
- */
-
-#define TOKENCONCAT(x, y) TOKENCONCAT_DETAIL(x, y)
-/**
- * @brief Generates an unique coroutine label with the __LINE__ macro
- */
-#define CR_LABEL TOKENCONCAT(CR_, __LINE__)
+#include "sq_coro_common.h"
 
 /**
  * @brief Coroutine state structure to be defined in class
