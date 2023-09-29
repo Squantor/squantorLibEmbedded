@@ -16,14 +16,16 @@
 
 #include "sq_coro_common.h"
 
+namespace util {
 /**
  * @brief Coroutine state structure to be defined in class
  *
  */
-struct crState {
+struct coroState {
   void* label;
   bool initialized;
 };
+}
 
 /**
  * @brief Start of coroutine
