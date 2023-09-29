@@ -18,12 +18,14 @@
 
 namespace util {
 /**
- * @brief Coroutine state structure to be defined in class
+ * @brief Coroutine state class to be defined in class
  *
  */
-struct coroState {
+class coroState {
+ public:
+  coroState() : label{nullptr} {};
+  ~coroState() = default;
   void* label;
-  bool initialized;
 };
 }
 
@@ -33,13 +35,12 @@ struct coroState {
  * Be aware that the class member crCurrent should be declared and its initialized
  * should be set to false. This way the start coroutine can properly initialize.
  */
-#define CR_BEGIN                          \
-  do {                                    \
-    if (crCurrent.initialized == false) { \
-      crCurrent.label = &&CR_START;       \
-      crCurrent.initialized = true;       \
-    }                                     \
-    goto* crCurrent.label;                \
+#define CR_BEGIN                      \
+  do {                                \
+    if (crCurrent.label == nullptr) { \
+      crCurrent.label = &&CR_START;   \
+    }                                 \
+    goto* crCurrent.label;            \
   CR_START:;
 
 /**
