@@ -35,118 +35,108 @@ class coroState {
  * @param context context of the coroutine
  *
  */
-#define CR_BEGIN(context)           \
-  do {                              \
-    if (context.label == nullptr) { \
-      context.label = &&CR_START;   \
-    }                               \
-    goto* context.label;            \
+#define CR_BEGIN(context)                \
+  util::coroState& localState = context; \
+  do {                                   \
+    if (localState.label == nullptr) {   \
+      localState.label = &&CR_START;     \
+    }                                    \
+    goto* localState.label;              \
   CR_START:;
 
 /**
  * @brief End of non void function coroutines
  *
- * @param context context of the coroutine
  * @param retval return value to pass
  *
  */
-#define CR_END(context, retval) \
-  context.label = &&CR_START;   \
-  return retval;                \
-  }                             \
+#define CR_END(retval)           \
+  localState.label = &&CR_START; \
+  return retval;                 \
+  }                              \
   while (0)
 
 /**
  * @brief End of void function coroutines
  *
- * @param context context of the coroutine
- *
  */
-#define CR_END_V(context)     \
-  context.label = &&CR_START; \
-  return;                     \
-  }                           \
+#define CR_END_V()               \
+  localState.label = &&CR_START; \
+  return;                        \
+  }                              \
   while (0)
 
 /**
  * @brief Yield the coroutine while returning a value
  *
- * @param context context of the coroutine
  * @param retval return value to pass
  *
  */
-#define CR_YIELD(context, retval) \
-  do {                            \
-    context.label = &&CR_LABEL;   \
-    return (retval);              \
-  CR_LABEL:;                      \
+#define CR_YIELD(retval)           \
+  do {                             \
+    localState.label = &&CR_LABEL; \
+    return (retval);               \
+  CR_LABEL:;                       \
   } while (0)
 
 /**
  * @brief Yield the coroutine
  *
- * @param context context of the coroutine
- *
  */
-#define CR_YIELD_V(context)     \
-  do {                          \
-    context.label = &&CR_LABEL; \
-    return;                     \
-  CR_LABEL:;                    \
+#define CR_YIELD_V()               \
+  do {                             \
+    localState.label = &&CR_LABEL; \
+    return;                        \
+  CR_LABEL:;                       \
   } while (0)
 
 /**
  * @brief Wait the coroutine on condition
  *
- * @param context context of the coroutine
  * @param retval return value to pass
  * @param cond condition to wait for
  *
  */
-#define CR_WAIT(context, retval, cond) \
-  do {                                 \
-    context.label = &&CR_LABEL;        \
-  CR_LABEL:;                           \
-    if (!(cond)) return retval;        \
+#define CR_WAIT(retval, cond)      \
+  do {                             \
+    localState.label = &&CR_LABEL; \
+  CR_LABEL:;                       \
+    if (!(cond)) return retval;    \
   } while (0)
 
 /**
  * @brief Wait the coroutine on condition
  *
- * @param context context of the coroutine
  * @param cond condition to wait for
  *
  */
-#define CR_WAIT_V(context, cond) \
-  do {                           \
-    context.label = &&CR_LABEL;  \
-  CR_LABEL:;                     \
-    if (!(cond)) return;         \
+#define CR_WAIT_V(cond)            \
+  do {                             \
+    localState.label = &&CR_LABEL; \
+  CR_LABEL:;                       \
+    if (!(cond)) return;           \
   } while (0)
 
 /**
  * @brief Stop coroutine and go to beginning while returning a value
  *
- * @param context context of the coroutine
  * @param retval return value to pass
  *
  */
-#define CR_STOP(context, retval) \
-  do {                           \
-    context.label = &&CR_START;  \
-    return (retval);             \
+#define CR_STOP(retval)            \
+  do {                             \
+    localState.label = &&CR_START; \
+    return (retval);               \
   } while (0)
 
 /**
  * @brief Stop coroutine and go to beginning
  *
- * @param context context of the coroutine
- *
  */
-#define CR_STOP_V(context)      \
-  do {                          \
-    context.label = &&CR_START; \
-    return;                     \
+#define CR_STOP_V(context)         \
+  do {                             \
+    localState.label = &&CR_START; \
+    return;                        \
   } while (0)
 
 #endif
