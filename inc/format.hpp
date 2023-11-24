@@ -12,6 +12,10 @@
 #ifndef FORMAT_HPP
 #define FORMAT_HPP
 
-namespace util {}  // namespace util
+#include <span>
+
+namespace util {
+std::span<char> appendString(std::span<char> buffer, std::span<char> string);
+}  // namespace util
 
 #endif
