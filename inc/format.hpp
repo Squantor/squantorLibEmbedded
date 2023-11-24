@@ -13,9 +13,11 @@
 #define FORMAT_HPP
 
 #include <span>
+#include <cstdint>
 
 namespace util {
 std::span<char> appendString(std::span<char> buffer, std::span<char> string);
+std::span<char> appendDigit(std::span<char> buffer, const std::uint8_t data);
 }  // namespace util
 
 #endif
