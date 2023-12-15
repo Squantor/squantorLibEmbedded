@@ -11,8 +11,8 @@
  * in spigot.
  *
  */
-#ifndef COROUTINE_HPP
-#define COROUTINE_HPP
+#ifndef SQ_CORO_HPP
+#define SQ_CORO_HPP
 
 #include "sq_coro_common.h"
 
@@ -131,6 +131,29 @@ class coroState {
   CR_LABEL:;                                                  \
     if (!(cond))                                              \
       return;                                                 \
+  } while (0)
+
+/**
+ * @brief redo previous code on condition
+ *
+ * @param cond condition to check
+ * @param retval return value to return
+ */
+#define CR_RETRY(retval, cond) \
+  do {                         \
+    if (!(cond))               \
+      return retval;           \
+  } while (0)
+
+/**
+ * @brief redo previous code on condition
+ *
+ * @param cond condition to check
+ */
+#define CR_RETRY_V(cond) \
+  do {                   \
+    if (!(cond))         \
+      return;            \
   } while (0)
 
 /**

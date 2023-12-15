@@ -74,11 +74,12 @@
  * @brief Wait the coroutine on condition
  *
  */
-#define CR_WAIT(retval, cond)   \
-  do {                          \
-    crCurrent = &&CR_LABEL;     \
-  CR_LABEL:;                    \
-    if (!(cond)) return retval; \
+#define CR_WAIT(retval, cond) \
+  do {                        \
+    crCurrent = &&CR_LABEL;   \
+  CR_LABEL:;                  \
+    if (!(cond))              \
+      return retval;          \
   } while (0)
 
 /**
@@ -89,7 +90,31 @@
   do {                      \
     crCurrent = &&CR_LABEL; \
   CR_LABEL:;                \
-    if (!(cond)) return;    \
+    if (!(cond))            \
+      return;               \
+  } while (0)
+
+/**
+ * @brief redo previous code on condition
+ *
+ * @arg cond condition to check
+ * @arg retval return value to return
+ */
+#define CR_RETRY(retval, cond) \
+  do {                         \
+    if (!(cond))               \
+      return retval;           \
+  } while (0)
+
+/**
+ * @brief redo previous code on condition
+ *
+ * @arg cond condition to check
+ */
+#define CR_RETRY_V(cond) \
+  do {                   \
+    if (!(cond))         \
+      return;            \
   } while (0)
 
 /**
