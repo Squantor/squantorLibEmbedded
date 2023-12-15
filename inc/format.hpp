@@ -30,6 +30,9 @@ std::span<char> appendHex(std::span<char> buffer, std::uint8_t data);
 std::span<char> appendDec(std::span<char> buffer, std::uint32_t data);
 std::span<char> appendDec(std::span<char> buffer, std::uint16_t data);
 std::span<char> appendDec(std::span<char> buffer, std::uint8_t data);
+std::span<char> appendDec(std::span<char> buffer, std::int32_t data);
+std::span<char> appendDec(std::span<char> buffer, std::int16_t data);
+std::span<char> appendDec(std::span<char> buffer, std::int8_t data);
 }  // namespace util
 
 #endif

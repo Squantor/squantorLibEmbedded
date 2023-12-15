@@ -117,6 +117,8 @@ std::span<char> appendDec(std::span<char> buffer, std::uint32_t data) {
     data -= idx * num;
     num = num / 10;
   }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
   return result;
 }
 
@@ -134,6 +136,8 @@ std::span<char> appendDec(std::span<char> buffer, std::uint16_t data) {
     data -= idx * num;
     num = num / 10;
   }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
   return result;
 }
 
@@ -151,6 +155,77 @@ std::span<char> appendDec(std::span<char> buffer, std::uint8_t data) {
     data -= idx * num;
     num = num / 10;
   }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
+  return result;
+}
+
+std::span<char> appendDec(std::span<char> buffer, std::int32_t data) {
+  bool supressDigits = true;
+  std::span result = buffer;
+  std::uint32_t num = 1000000000;
+  std::uint8_t idx;
+  if (data < 0) {
+    result = appendChar(result, '-');
+    data = -data;
+  }
+  while (num > 0) {
+    idx = data / num;
+    if (idx != 0)
+      supressDigits = false;
+    if (!supressDigits)
+      result = appendDigit(result, idx);
+    data -= idx * num;
+    num = num / 10;
+  }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
+  return result;
+}
+
+std::span<char> appendDec(std::span<char> buffer, std::int16_t data) {
+  bool supressDigits = true;
+  std::span result = buffer;
+  std::uint32_t num = 10000;
+  std::uint8_t idx;
+  if (data < 0) {
+    result = appendChar(result, '-');
+    data = -data;
+  }
+  while (num > 0) {
+    idx = data / num;
+    if (idx != 0)
+      supressDigits = false;
+    if (!supressDigits)
+      result = appendDigit(result, idx);
+    data -= idx * num;
+    num = num / 10;
+  }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
+  return result;
+}
+
+std::span<char> appendDec(std::span<char> buffer, std::int8_t data) {
+  bool supressDigits = true;
+  std::span result = buffer;
+  std::uint32_t num = 100;
+  std::uint8_t idx;
+  if (data < 0) {
+    result = appendChar(result, '-');
+    data = -data;
+  }
+  while (num > 0) {
+    idx = data / num;
+    if (idx != 0)
+      supressDigits = false;
+    if (!supressDigits)
+      result = appendDigit(result, idx);
+    data -= idx * num;
+    num = num / 10;
+  }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
   return result;
 }
 
