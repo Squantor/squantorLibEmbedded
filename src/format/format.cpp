@@ -17,6 +17,24 @@ constexpr char hextable[] = "0123456789ABCDEF";
 
 namespace util {
 
+static std::span<char> appendDecGeneric(std::span<char> buffer, std::uint32_t data, uint32_t divider) {
+  bool supressDigits = true;
+  std::span result = buffer;
+  std::uint32_t idx;
+  while (divider > 0) {
+    idx = data / divider;
+    if (idx != 0)
+      supressDigits = false;
+    if (!supressDigits)
+      result = appendDigit(result, idx);
+    data -= idx * divider;
+    divider = divider / 10;
+  }
+  if (supressDigits == true)
+    result = appendDigit(result, idx);
+  return result;
+}
+
 std::span<char> appendChar(std::span<char> buffer, char c) {
   std::span<char>::iterator output = buffer.begin();
   if (output != buffer.end() - 1) {
@@ -104,22 +122,7 @@ std::span<char> appendHex(std::span<char> buffer, std::uint8_t data) {
 }
 
 std::span<char> appendDec(std::span<char> buffer, std::uint32_t data) {
-  bool supressDigits = true;
-  std::span result = buffer;
-  std::uint32_t num = 1000000000;
-  std::uint8_t idx;
-  while (num > 0) {
-    idx = data / num;
-    if (idx != 0)
-      supressDigits = false;
-    if (!supressDigits)
-      result = appendDigit(result, idx);
-    data -= idx * num;
-    num = num / 10;
-  }
-  if (supressDigits == true)
-    result = appendDigit(result, idx);
-  return result;
+  return appendDecGeneric(buffer, data, 1000000000);
 }
 
 std::span<char> appendDec(std::span<char> buffer, std::uint16_t data) {
