@@ -30,7 +30,7 @@ class coroState {
 }  // namespace util
 
 /**
- * @brief
+ * @brief Start of coroutine
  *
  * @param context context of the coroutine
  *

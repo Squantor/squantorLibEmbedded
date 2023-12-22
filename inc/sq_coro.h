@@ -29,7 +29,9 @@
   CR_START:;
 
 /**
- * @brief End of void function coroutines
+ * @brief End of non void function coroutines
+ *
+ * @param retval return value to pass
  *
  */
 #define CR_END(retval)    \
@@ -50,6 +52,8 @@
 
 /**
  * @brief Yield the coroutine while returning a value
+ *
+ * @param retval return value to pass
  *
  */
 #define CR_YIELD(retval)    \
@@ -73,6 +77,9 @@
 /**
  * @brief Wait the coroutine on condition
  *
+ * @param retval return value to pass
+ * @param cond condition to wait for
+ *
  */
 #define CR_WAIT(retval, cond) \
   do {                        \
@@ -84,6 +91,8 @@
 
 /**
  * @brief Wait the coroutine on condition
+ *
+ * @param cond condition to wait for
  *
  */
 #define CR_WAIT_V(cond)     \
@@ -97,8 +106,8 @@
 /**
  * @brief redo previous code on condition
  *
- * @arg cond condition to check
- * @arg retval return value to return
+ * @param cond condition to check
+ * @param retval return value to return
  */
 #define CR_RETRY(retval, cond) \
   do {                         \
@@ -109,7 +118,7 @@
 /**
  * @brief redo previous code on condition
  *
- * @arg cond condition to check
+ * @param cond condition to check
  */
 #define CR_RETRY_V(cond) \
   do {                   \
@@ -119,6 +128,8 @@
 
 /**
  * @brief Stop coroutine and go to beginning while returning a value
+ *
+ * @param retval return value to pass
  *
  */
 #define CR_STOP(retval)     \
