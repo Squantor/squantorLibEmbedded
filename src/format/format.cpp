@@ -70,36 +70,6 @@ std::span<char> appendDigit(std::span<char> buffer, const std::uint32_t data) {
   return result;
 }
 
-std::span<char> appendDigit(std::span<char> buffer, const std::int32_t data) {
-  std::span<char> result = buffer;
-  result = appendChar(result, hextable[data & 0x0F]);
-  return result;
-}
-
-std::span<char> appendDigit(std::span<char> buffer, const std::uint16_t data) {
-  std::span<char> result = buffer;
-  result = appendChar(result, hextable[data & 0x0F]);
-  return result;
-}
-
-std::span<char> appendDigit(std::span<char> buffer, const std::int16_t data) {
-  std::span<char> result = buffer;
-  result = appendChar(result, hextable[data & 0x0F]);
-  return result;
-}
-
-std::span<char> appendDigit(std::span<char> buffer, const std::uint8_t data) {
-  std::span<char> result = buffer;
-  result = appendChar(result, hextable[data & 0x0F]);
-  return result;
-}
-
-std::span<char> appendDigit(std::span<char> buffer, const std::int8_t data) {
-  std::span<char> result = buffer;
-  result = appendChar(result, hextable[data & 0x0F]);
-  return result;
-}
-
 std::span<char> appendHex(std::span<char> buffer, std::uint32_t data) {
   std::span result = buffer;
   for (int i = 0; i < 8; i++) {
@@ -142,27 +112,42 @@ std::span<char> appendDec(std::span<char> buffer, std::uint8_t data) {
 }
 
 std::span<char> appendDec(std::span<char> buffer, std::int32_t data) {
+  uint32_t dataUnsigned;
   if (data < 0) {
     buffer = appendChar(buffer, '-');
-    data = -data;
-  }
-  return appendDecGeneric(buffer, data, 1000000000);
+    if (data == -2147483648)
+      dataUnsigned = 2147483648u;
+    else
+      dataUnsigned = static_cast<std::uint32_t>(-data);
+  } else
+    dataUnsigned = static_cast<std::uint32_t>(data);
+  return appendDecGeneric(buffer, dataUnsigned, 1000000000);
 }
 
 std::span<char> appendDec(std::span<char> buffer, std::int16_t data) {
+  uint32_t dataUnsigned;
   if (data < 0) {
     buffer = appendChar(buffer, '-');
-    data = -data;
-  }
-  return appendDecGeneric(buffer, static_cast<std::uint32_t>(data), 10000);
+    if (data == -32768)
+      dataUnsigned = 32768u;
+    else
+      dataUnsigned = static_cast<std::uint32_t>(-data);
+  } else
+    dataUnsigned = static_cast<std::uint32_t>(data);
+  return appendDecGeneric(buffer, dataUnsigned, 10000);
 }
 
 std::span<char> appendDec(std::span<char> buffer, std::int8_t data) {
+  uint32_t dataUnsigned;
   if (data < 0) {
     buffer = appendChar(buffer, '-');
-    data = -data;
-  }
-  return appendDecGeneric(buffer, static_cast<std::uint32_t>(data), 100);
+    if (data == -128)
+      dataUnsigned = 128u;
+    else
+      dataUnsigned = static_cast<std::uint32_t>(-data);
+  } else
+    dataUnsigned = static_cast<std::uint32_t>(data);
+  return appendDecGeneric(buffer, dataUnsigned, 100);
 }
 
 }  // namespace util

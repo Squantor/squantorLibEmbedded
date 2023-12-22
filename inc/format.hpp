@@ -50,66 +50,6 @@ std::span<char> appendChar(std::span<char> buffer, char c);
 std::span<char> appendDigit(std::span<char> buffer, const std::uint32_t data);
 
 /**
- * @brief Appends a digit to a span
- *
- * Appends a digit to the input span and returns a span with remaining space
- * The first 4 bits of data are evaluated and translated from 0 to F (hex)
- *
- * @param buffer span to append the digit to
- * @param data digit to add to the span, only the first 4 bits are evaluated
- * @return span with available space
- */
-std::span<char> appendDigit(std::span<char> buffer, const std::int32_t data);
-
-/**
- * @brief Appends a digit to a span
- *
- * Appends a digit to the input span and returns a span with remaining space
- * The first 4 bits of data are evaluated and translated from 0 to F (hex)
- *
- * @param buffer span to append the digit to
- * @param data digit to add to the span, only the first 4 bits are evaluated
- * @return span with available space
- */
-std::span<char> appendDigit(std::span<char> buffer, const std::uint16_t data);
-
-/**
- * @brief Appends a digit to a span
- *
- * Appends a digit to the input span and returns a span with remaining space
- * The first 4 bits of data are evaluated and translated from 0 to F (hex)
- *
- * @param buffer span to append the digit to
- * @param data digit to add to the span, only the first 4 bits are evaluated
- * @return span with available space
- */
-std::span<char> appendDigit(std::span<char> buffer, const std::int16_t data);
-
-/**
- * @brief Appends a digit to a span
- *
- * Appends a digit to the input span and returns a span with remaining space
- * The first 4 bits of data are evaluated and translated from 0 to F (hex)
- *
- * @param buffer span to append the digit to
- * @param data digit to add to the span, only the first 4 bits are evaluated
- * @return span with available space
- */
-std::span<char> appendDigit(std::span<char> buffer, const std::uint8_t data);
-
-/**
- * @brief Appends a digit to a span
- *
- * Appends a digit to the input span and returns a span with remaining space
- * The first 4 bits of data are evaluated and translated from 0 to F (hex)
- *
- * @param buffer span to append the digit to
- * @param data digit to add to the span, only the first 4 bits are evaluated
- * @return span with available space
- */
-std::span<char> appendDigit(std::span<char> buffer, const std::int8_t data);
-
-/**
  * @brief Appends a hexidecimal number to a span
  *
  * Appends a hex number to the input span and returns a span with remaining space
