@@ -14,7 +14,9 @@ NAME := squantorLibEmbedded
 LIB_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 # library files and includes
-$(NAME)_LIB_FILES := $(LIB_DIR)/src/ansi/parse_ansi.c \
+$(NAME)_LIB_FILES := \
+$(LIB_DIR)/src/ansi/parse_ansi.c \
+$(LIB_DIR)/src/ansi/parse_ansi.cpp \
 $(LIB_DIR)/src/queue/queue_string.c \
 $(LIB_DIR)/src/queue/queue_char.c \
 $(LIB_DIR)/src/queue/queue_uint8.c \
@@ -34,7 +36,7 @@ $(LIB_DIR)/src/print/print_decnz_u32.c \
 $(LIB_DIR)/src/print/print_dec_u32.c \
 $(LIB_DIR)/src/print/print_bin_u32.c \
 $(LIB_DIR)/src/parse/parsedigit.c \
-$(LIB_DIR)/src/parse/parsedigit.cpp \
+$(LIB_DIR)/src/parse/parse_digit.cpp \
 $(LIB_DIR)/src/font/font_8x8.cpp \
 $(LIB_DIR)/src/bit/bitzoom.c \
 $(LIB_DIR)/src/pulse_density/pulse_density.c \
