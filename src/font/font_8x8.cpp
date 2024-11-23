@@ -4,9 +4,10 @@
  * Copyright (c) 2021 Bart Bilos
  * For conditions of distribution and use, see LICENSE file
  */
+#include <array>
 #include <fonts/font_8x8.hpp>
 
-const uint16_t ascii2font8x8Index[128] = {
+std::array<const uint16_t, 128> ascii2font8x8Index{
   0,    // U+0000 (null)
   0,    // U+0001 (SOH)
   0,    // U+0002 (STX)
@@ -137,7 +138,7 @@ const uint16_t ascii2font8x8Index[128] = {
   0,    // U+007F (DEL)
 };
 
-const uint8_t font8x8Col[760] = {
+std::array<const uint8_t, 760> font8x8Col = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0020 (space)
   0x18, 0x3C, 0x3C, 0x18, 0x18, 0x00, 0x18, 0x00,  // U+0021 (!)
   0x36, 0x36, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0022 (")
@@ -234,8 +235,7 @@ const uint8_t font8x8Col[760] = {
   0x07, 0x0C, 0x0C, 0x38, 0x0C, 0x0C, 0x07, 0x00,  // U+007D (})
   0x6E, 0x3B, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+007E (~)
 };
-
-const uint8_t font8x8Row[760] = {
+std::array<const uint8_t, 760> font8x8Row{
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0020 (space)
   0x00, 0x00, 0x06, 0x5F, 0x5F, 0x06, 0x00, 0x00,  // U+0021 (!)
   0x00, 0x00, 0x03, 0x03, 0x00, 0x03, 0x03, 0x00,  // U+0022 (")
@@ -333,7 +333,7 @@ const uint8_t font8x8Row[760] = {
   0x00, 0x01, 0x03, 0x02, 0x03, 0x01, 0x03, 0x02,  // U+007E (~)
 };
 
-const uint8_t font8x8RowFlipped[760] = {
+std::array<const uint8_t, 760> font8x8RowFlipped{
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // U+0020 (space)
   0x00, 0x00, 0x06, 0x5F, 0x5F, 0x06, 0x00, 0x00,  // U+0021 (!)
   0x00, 0x03, 0x03, 0x00, 0x03, 0x03, 0x00, 0x00,  // U+0022 (")
@@ -431,7 +431,7 @@ const uint8_t font8x8RowFlipped[760] = {
   0x02, 0x03, 0x01, 0x03, 0x02, 0x03, 0x01, 0x00,  // U+007E (~)
 };
 
-const uint8_t font8x8SkinnyRowFlipped[760] = {
+std::array<const uint8_t, 760> font8x8SkinnyRowFlipped{
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Character 0x20 (32: ' ')
   0x00, 0x08, 0x08, 0x08, 0x08, 0x00, 0x08, 0x0C,  // Character 0x21 (33: '!')
   0x00, 0x14, 0x14, 0x14, 0x00, 0x00, 0x00, 0x00,  // Character 0x22 (34: '"')
@@ -529,8 +529,7 @@ const uint8_t font8x8SkinnyRowFlipped[760] = {
   0x00, 0x00, 0x00, 0x00, 0x26, 0x1A, 0x00, 0x00,  // Character 0x7e (126: '~')
 };
 
-const font mono8x8Col{8, 8, font8x8Col, ascii2font8x8Index, sizeof(font8x8Col), sizeof(ascii2font8x8Index)};
-const font mono8x8Row{8, 8, font8x8Row, ascii2font8x8Index, sizeof(font8x8Row), sizeof(ascii2font8x8Index)};
-const font mono8x8RowFlip{8, 8, font8x8RowFlipped, ascii2font8x8Index, sizeof(font8x8RowFlipped), sizeof(ascii2font8x8Index)};
-const font mono8x8SkinnyRowFlip{
-  8, 8, font8x8SkinnyRowFlipped, ascii2font8x8Index, sizeof(font8x8SkinnyRowFlipped), sizeof(ascii2font8x8Index)};
+sqEmbedded::font mono8x8Col(8u, 8u, font8x8Col, ascii2font8x8Index);
+sqEmbedded::font mono8x8Row(8u, 8u, font8x8Row, ascii2font8x8Index);
+sqEmbedded::font mono8x8RowFlip(8u, 8u, font8x8RowFlipped, ascii2font8x8Index);
+sqEmbedded::font mono8x8SkinnyRowFlip(8u, 8u, font8x8SkinnyRowFlipped, ascii2font8x8Index);
