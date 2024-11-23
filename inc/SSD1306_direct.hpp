@@ -48,12 +48,15 @@ struct display {
     uint16_t dataIndex = 0;
     uint32_t busStatus;
     busStatus = startI2CTransfer(I2C0, i2cAddress);
-    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY)) goto i2cStop;
+    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY))
+      goto i2cStop;
     busStatus = sendI2CData(I2C0, 0x00);  // Command setup
-    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY)) goto i2cStop;
+    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY))
+      goto i2cStop;
     do {
       busStatus = sendI2CData(I2C0, data[dataIndex]);
-      if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY)) goto i2cStop;
+      if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY))
+        goto i2cStop;
       dataIndex++;
     } while (dataIndex < length);
   i2cStop:
@@ -65,12 +68,15 @@ struct display {
     uint16_t dataIndex = 0;
     uint32_t busStatus;
     busStatus = startI2CTransfer(I2C0, i2cAddress);
-    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY)) goto i2cStop;
+    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY))
+      goto i2cStop;
     busStatus = sendI2CData(I2C0, 0x40);  // data write
-    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY)) goto i2cStop;
+    if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY))
+      goto i2cStop;
     do {
       busStatus = sendI2CData(I2C0, data[dataIndex]);
-      if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY)) goto i2cStop;
+      if ((I2C_STAT_MSTSTATE(busStatus) != I2C_STAT_MSSTATE_TRANSMIT_READY))
+        goto i2cStop;
       dataIndex++;
     } while (dataIndex < length);
   i2cStop:
