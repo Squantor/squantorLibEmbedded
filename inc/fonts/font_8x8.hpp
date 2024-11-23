@@ -13,9 +13,9 @@
 
 #include <fonts/font.hpp>
 
-extern const font mono8x8Col;
-extern const font mono8x8Row;
-extern const font mono8x8RowFlip;
-extern const font mono8x8SkinnyRowFlip;
+extern sqEmbedded::font mono8x8Col;
+extern sqEmbedded::font mono8x8Row;
+extern sqEmbedded::font mono8x8RowFlip;
+extern sqEmbedded::font mono8x8SkinnyRowFlip;
 
 #endif
