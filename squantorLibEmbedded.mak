@@ -37,7 +37,9 @@ $(LIB_DIR)/src/print/print_dec_u32.c \
 $(LIB_DIR)/src/print/print_bin_u32.c \
 $(LIB_DIR)/src/parse/parsedigit.c \
 $(LIB_DIR)/src/parse/parse_digit.cpp \
-$(LIB_DIR)/src/font/font_8x8.cpp \
+$(LIB_DIR)/src/font/8x8_col.cpp \
+$(LIB_DIR)/src/font/8x8_row.cpp \
+$(LIB_DIR)/src/font/8x8_rowflip.cpp \
 $(LIB_DIR)/src/bit/bitzoom.c \
 $(LIB_DIR)/src/pulse_density/pulse_density.c \
 $(LIB_DIR)/src/pulse_density/pulse_density.cpp \

@@ -13,7 +13,6 @@
 
 #include <fonts/font.hpp>
 
-extern sqEmbedded::font mono8x8Col;
 extern sqEmbedded::font mono8x8Row;
 extern sqEmbedded::font mono8x8RowFlip;
 extern sqEmbedded::font mono8x8SkinnyRowFlip;
