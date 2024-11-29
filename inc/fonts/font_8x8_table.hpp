@@ -14,6 +14,8 @@
 #include <cstdint>
 #include <array>
 
+namespace sqEmbedded::fonts {
+
 constexpr std::array<const std::uint16_t, 128u> ascii2font8x8Index{
   0,    // U+0000 (null)
   0,    // U+0001 (SOH)
@@ -144,5 +146,6 @@ constexpr std::array<const std::uint16_t, 128u> ascii2font8x8Index{
   752,  // U+007E (~)
   0,    // U+007F (DEL)
 };
+}
 
 #endif
