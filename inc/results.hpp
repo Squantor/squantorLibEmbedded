@@ -18,6 +18,8 @@ enum class results : std::uint8_t {
   ok = 0,   /*!< Everything okay*/
   error,    /*!< Unspecified error */
   notFound, /*!< not found */
+  empty,    /*!< empty */
+  full,     /*!< full */
 };
 }  // namespace squLib
 

@@ -7,7 +7,7 @@
 /**
  * @file interprets ascii strings as numbers and maintains a stack definitions
  * @brief class that interprets ascii strings as numbers and maintains a stack
- * TODO: doxygen
+ * @todo doxygen
  */
 #ifndef COMMAND_VALUE_STACK_HPP
 #define COMMAND_VALUE_STACK_HPP
@@ -16,7 +16,6 @@
 #include <cctype>
 #include <array>
 #include <span>
-#include <optional>
 #include <parse_digit.hpp>
 #include <results.hpp>
 
@@ -37,9 +36,13 @@ struct commandValueStack {
     return topOfStack;
   }
 
-  void push(std::int32_t value) {
+  results push(std::int32_t value) {
+    std::size_t newTop = topOfStack + 1;
+    if (newTop == stackSize)
+      return results::full;
     valueStack[topOfStack] = value;
-    topOfStack = topOfStack + 1;
+    topOfStack = newTop;
+    return results::ok;
   }
 
   results push(std::span<const char> string) {
@@ -68,7 +71,7 @@ struct commandValueStack {
         value = value + *result;
         index = index + 1;
       }
-      push(value);
+      return push(value);
     } else {
       // handle positive number
       while (index < string.size()) {
@@ -81,17 +84,18 @@ struct commandValueStack {
       }
       if (isNegative)
         value = -value;
-      push(value);
+      return push(value);
     }
-    return results::ok;
   }
 
-  std::optional<std::int32_t> pop() {
+  results pop(std::int32_t &value) {
     if (topOfStack > 0) {
-      topOfStack = topOfStack - 1;
-      return valueStack[topOfStack];
+      std::size_t newTop = topOfStack - 1;
+      value = valueStack[newTop];
+      topOfStack = newTop;
+      return results::ok;
     } else
-      return {};
+      return results::empty;
   }
 
   void dup() {
@@ -111,7 +115,7 @@ struct commandValueStack {
   void over() {}
 
   void rot() {}
-  std::size_t topOfStack;
+  std::size_t topOfStack;  //! next empty element
   std::array<std::int32_t, stackSize> valueStack;
 };
 }  // namespace squLib
