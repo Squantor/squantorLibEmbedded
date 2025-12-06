@@ -32,14 +32,14 @@ struct console {
   constexpr void write(const char *s) {
     std::size_t maxIndex = strlen(s);
     for (std::size_t index = 0; index < maxIndex; index++) {
-      driver.write(s[index]);
+      driver.Transmit(s[index]);
     }
   }
   constexpr void write(std::span<const char> s) {
-    driver.write(s);
+    driver.Transmit(s);
   }
   constexpr void write(const char &c) {
-    driver.write(c);
+    driver.Transmit(c);
   }
 
   template <typename... Ts>
