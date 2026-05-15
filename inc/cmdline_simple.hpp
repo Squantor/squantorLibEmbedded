@@ -85,9 +85,11 @@ class commandlineSimple {
     //   yes, parse and dont print
     //   done parsing and it is a ansi sequence? then handle it
     // nothing special to handle, normal char
-    consoleDriver.write(c);
-    buffer[bufferIndex] = c;
-    bufferIndex = bufferIndex + 1;
+    if (bufferIndex < N) {
+      consoleDriver.write(c);
+      buffer[bufferIndex] = c;
+      bufferIndex = bufferIndex + 1;
+    }
   done:
     return;  // added to supress warning
   }
