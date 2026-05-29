@@ -28,7 +28,7 @@ namespace util {
 static std::span<char> appendDecGeneric(std::span<char> buffer, std::uint32_t data, uint32_t divider) {
   bool supressDigits = true;
   std::span result = buffer;
-  std::uint32_t idx;
+  std::uint32_t idx{0};
   while (divider > 0) {
     idx = data / divider;
     if (idx != 0)
