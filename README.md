@@ -1,3 +1,5 @@
+# Migrated
+This project/repository has been migrated to [Codeberg](https://codeberg.org/Squantor/squantorLibEmbedded). Please file any issues and pullrequests there.
 # Embedded utility library
 This software library contains a bunch of routines that are useful for developing embedded systems. These routines are predominantly in written in C++17.
 ## Usage
